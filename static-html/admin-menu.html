@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cozy Kitchen - Menu Management</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="../public/favicon.ico">
+  <style>
+    .modal-bg { position:fixed; inset:0; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:50; }
+    .modal-card { background:#fff; border-radius:1.5rem; max-width:32rem; width:100%; padding:2rem; box-shadow:0 8px 32px #0003; }
+    .modal-card label { display:block; margin-bottom:0.5rem; font-weight:500; color:#444; }
+    .modal-card input, .modal-card textarea, .modal-card select { width:100%; border-radius:0.75rem; border:1.5px solid #fed7aa; padding:0.5rem 1rem; margin-bottom:1rem; font-size:1rem; }
+    .modal-actions { display:flex; gap:1rem; margin-top:1rem; }
+    @media (max-width: 600px) {
+      #menuList table { display: none; }
+      .mobile-menu-list { display: block; }
+    }
+    @media (min-width: 601px) {
+      .mobile-menu-list { display: none; }
+    }
+    .mobile-card {
+      background: #fff;
+      border-radius: 1rem;
+      box-shadow: 0 2px 8px #0001;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    .mobile-card img {
+      width: 60px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 0.5rem;
+      flex-shrink: 0;
+    }
+    .mobile-card-content {
+      flex: 1;
+    }
+    .mobile-card-title {
+      font-weight: bold;
+      color: #222;
+      margin-bottom: 0.2rem;
+      font-size: 1.1rem;
+    }
+    .mobile-card-desc {
+      color: #666;
+      font-size: 0.97rem;
+      margin-bottom: 0.2rem;
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .mobile-card-meta {
+      font-size: 0.95rem;
+      color: #fb923c;
+      margin-bottom: 0.2rem;
+    }
+    .mobile-card-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .mobile-card-actions button {
+      font-size: 1.1rem;
+      padding: 0.4rem 0.9rem;
+      border-radius: 0.7rem;
+      min-width: unset;
+      height: 2.2rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display:flex; align-items:center; justify-content:space-between; max-width:64rem; margin:0 auto;">
+      <div style="display:flex; align-items:center; gap:1rem;">
+        <a href="admin-dashboard.html" class="button" style="background:#fff; color:#fb923c; border:1px solid #fed7aa;">&#8592;</a>
+        <div>
+          <h1 style="font-size:1.5rem; font-weight:bold; color:#222;">Menu Management</h1>
+          <p style="font-size:1rem; color:#666;">Add, edit, and organize your menu items</p>
+        </div>
+      </div>
+      <button class="button" style="background:#fb923c; color:#fff;" onclick="showAddModal()">➕ Add Item</button>
+    </div>
+  </header>
+  <main style="max-width:64rem; margin:2rem auto; padding:0 1rem;">
+    <div style="display:flex; flex-wrap:wrap; gap:1rem; margin-bottom:2rem;">
+      <div style="display:flex; gap:0.5rem;">
+        <button class="button" data-category="All" style="background:#fb923c; color:#fff;">All</button>
+        <button class="button" data-category="Appetizers" style="background:#fff; color:#fb923c; border:1px solid #fed7aa;">Appetizers</button>
+        <button class="button" data-category="Main Courses" style="background:#fff; color:#fb923c; border:1px solid #fed7aa;">Main Courses</button>
+        <button class="button" data-category="Desserts" style="background:#fff; color:#fb923c; border:1px solid #fed7aa;">Desserts</button>
+        <button class="button" data-category="Beverages" style="background:#fff; color:#fb923c; border:1px solid #fed7aa;">Beverages</button>
+      </div>
+      <input id="searchInput" type="text" placeholder="Search menu items..." style="flex:1; min-width:200px; border-radius:1rem; border:1.5px solid #fed7aa; padding:0.75rem 1rem; font-size:1rem;" />
+    </div>
+    <div id="menuList" style="margin-bottom:2rem;"></div>
+    <div class="mobile-menu-list"></div>
+  </main>
+  <div id="addModal" class="modal-bg" style="display:none;">
+    <form class="modal-card" id="addItemForm">
+      <h2 style="font-size:1.25rem; font-weight:bold; color:#fb923c; margin-bottom:1rem;">Add New Menu Item</h2>
+      <label>Item Name</label>
+      <input type="text" id="addName" placeholder="Enter item name" required />
+      <label>Description</label>
+      <textarea id="addDesc" placeholder="Describe the dish..." rows="3"></textarea>
+      <div style="display:flex; gap:1rem;">
+        <div style="flex:1;">
+          <label>Price ($)</label>
+          <input type="number" id="addPrice" step="0.01" placeholder="0.00" required />
+        </div>
+        <div style="flex:1;">
+          <label>Category</label>
+          <select id="addCategory">
+            <option>Appetizers</option>
+            <option>Main Courses</option>
+            <option>Desserts</option>
+            <option>Beverages</option>
+          </select>
+        </div>
+      </div>
+      <label>Image</label>
+      <input type="file" id="addImage" accept="image/*" />
+      <div class="modal-actions">
+        <button type="button" class="button" style="background:#fff; color:#fb923c; border:1px solid #fed7aa; flex:1;" onclick="hideAddModal()">Cancel</button>
+        <button type="submit" class="button" style="background:#fb923c; color:#fff; flex:1;">Add Item</button>
+      </div>
+      <p style="color:#888; margin-top:1rem;">This is a demo form. Items are not saved after page reload.</p>
+    </form>
+  </div>
+  <div id="editModal" class="modal-bg" style="display:none;">
+    <form class="modal-card" id="editItemForm">
+      <h2 style="font-size:1.25rem; font-weight:bold; color:#fb923c; margin-bottom:1rem;">Edit Menu Item</h2>
+      <label>Item Name</label>
+      <input type="text" id="editName" required />
+      <label>Description</label>
+      <textarea id="editDesc" rows="3"></textarea>
+      <div style="display:flex; gap:1rem;">
+        <div style="flex:1;">
+          <label>Price ($)</label>
+          <input type="number" id="editPrice" step="0.01" required />
+        </div>
+        <div style="flex:1;">
+          <label>Category</label>
+          <select id="editCategory">
+            <option>Appetizers</option>
+            <option>Main Courses</option>
+            <option>Desserts</option>
+            <option>Beverages</option>
+          </select>
+        </div>
+      </div>
+      <label>Image</label>
+      <input type="file" id="editImage" accept="image/*" />
+      <div class="modal-actions">
+        <button type="button" class="button" style="background:#fff; color:#fb923c; border:1px solid #fed7aa; flex:1;" onclick="hideEditModal()">Cancel</button>
+        <button type="submit" class="button" style="background:#fb923c; color:#fff; flex:1;">Save Changes</button>
+      </div>
+      <p style="color:#888; margin-top:1rem;">This is a demo form. Items are not saved after page reload.</p>
+    </form>
+  </div>
+  <script>
+    let menuItems = [
+      { id: 1, name: "Crispy Calamari", description: "Golden rings with tangy marinara sauce", price: 12.99, category: "Appetizers", status: "active", image: "photo-1618160702438-9b02ab6515c9" },
+      { id: 2, name: "Truffle Arancini", description: "Creamy risotto balls with black truffle", price: 14.99, category: "Appetizers", status: "active", image: "photo-1618160702438-9b02ab6515c9" },
+      { id: 3, name: "Grilled Salmon", description: "Atlantic salmon with herb butter and seasonal vegetables", price: 24.99, category: "Main Courses", status: "active", image: "photo-1618160702438-9b02ab6515c9" }
+    ];
+    let selectedCategory = 'All';
+    let searchTerm = '';
+    let editId = null;
+    function renderMenu() {
+      let filtered = menuItems.filter(item => (selectedCategory === 'All' || item.category === selectedCategory) && item.name.toLowerCase().includes(searchTerm.toLowerCase()));
+      // Render table/list view (desktop)
+      const listDiv = document.getElementById('menuList');
+      if (filtered.length === 0) {
+        listDiv.innerHTML = '<div style="text-align:center; color:#888;">No menu items found.</div>';
+      } else {
+        let table = `<table style='width:100%; border-collapse:collapse; background:#fff; border-radius:1rem; overflow:hidden; box-shadow:0 2px 8px #0001; font-size:0.97rem;'>`;
+        table += `<thead><tr style='background:#fff7ed; color:#fb923c;'><th style='padding:0.5rem; text-align:left;'>Img</th><th style='padding:0.5rem; text-align:left;'>Name</th><th style='padding:0.5rem; text-align:left;'>Price</th><th style='padding:0.5rem; text-align:left;'>Category</th><th style='padding:0.5rem; text-align:left;'>Status</th><th style='padding:0.5rem; text-align:left;'>Actions</th></tr></thead><tbody>`;
+        filtered.forEach(item => {
+          table += `<tr style='border-bottom:1px solid #f3f4f6;'>
+            <td style='padding:0.3rem;'><img src='https://images.unsplash.com/${item.image}?w=60&h=40&fit=crop' alt='${item.name}' style='width:40px; height:28px; object-fit:cover; border-radius:0.4rem;'></td>
+            <td style='padding:0.3rem;'>${item.name}</td>
+            <td style='padding:0.3rem; color:#fb923c;'>$${item.price}</td>
+            <td style='padding:0.3rem;'>${item.category}</td>
+            <td style='padding:0.3rem;'><span style='background:${item.status==='active'?'#4ade80':'#aaa'}; color:#fff; border-radius:9999px; padding:0.15rem 0.5rem; font-size:0.9em;'>${item.status}</span></td>
+            <td style='padding:0.3rem;'>
+              <button class='button' style='background:#fff; color:#fb923c; border:1px solid #fed7aa; font-size:0.9em; padding:0.2rem 0.7rem; margin-right:0.3rem; min-width:unset; height:2rem;' onclick='editItem(${item.id})'>✏️</button>
+              <button class='button' style='background:#fff; color:#ef4444; border:1px solid #fed7aa; font-size:0.9em; padding:0.2rem 0.7rem; min-width:unset; height:2rem;' onclick='deleteItem(${item.id})'>🗑️</button>
+            </td>
+          </tr>`;
+        });
+        table += '</tbody></table>';
+        listDiv.innerHTML = table;
+      }
+      // Render mobile card list
+      const mobileList = document.querySelector('.mobile-menu-list');
+      mobileList.innerHTML = '';
+      filtered.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'mobile-card';
+        card.innerHTML = `
+          <img src='https://images.unsplash.com/${item.image}?w=60&h=40&fit=crop' alt='${item.name}'>
+          <div class='mobile-card-content'>
+            <div class='mobile-card-title'>${item.name}</div>
+            <div class='mobile-card-meta'>$${item.price} • ${item.category}</div>
+            <span style='background:${item.status==='active'?'#4ade80':'#aaa'}; color:#fff; border-radius:9999px; padding:0.15rem 0.5rem; font-size:0.9em;'>${item.status}</span>
+            <div class='mobile-card-actions'>
+              <button class='button' style='background:#fff; color:#fb923c; border:1px solid #fed7aa;' onclick='editItem(${item.id})'>✏️</button>
+              <button class='button' style='background:#fff; color:#ef4444; border:1px solid #fed7aa;' onclick='deleteItem(${item.id})'>🗑️</button>
+            </div>
+          </div>
+        `;
+        mobileList.appendChild(card);
+      });
+    }
+    document.querySelectorAll('button[data-category]').forEach(btn => {
+      btn.addEventListener('click', function() {
+        selectedCategory = this.getAttribute('data-category');
+        document.querySelectorAll('button[data-category]').forEach(b => b.style.background = '#fff');
+        this.style.background = '#fb923c';
+        this.style.color = '#fff';
+        renderMenu();
+      });
+    });
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+      searchTerm = this.value;
+      renderMenu();
+    });
+    function showAddModal() {
+      document.getElementById('addModal').style.display = 'flex';
+    }
+    function hideAddModal() {
+      document.getElementById('addModal').style.display = 'none';
+      document.getElementById('addItemForm').reset();
+    }
+    function showEditModal(item) {
+      document.getElementById('editModal').style.display = 'flex';
+      document.getElementById('editName').value = item.name;
+      document.getElementById('editDesc').value = item.description;
+      document.getElementById('editPrice').value = item.price;
+      document.getElementById('editCategory').value = item.category;
+      editId = item.id;
+    }
+    function hideEditModal() {
+      document.getElementById('editModal').style.display = 'none';
+      document.getElementById('editItemForm').reset();
+      editId = null;
+    }
+    function editItem(id) {
+      const item = menuItems.find(i => i.id === id);
+      if (item) showEditModal(item);
+    }
+    function deleteItem(id) {
+      if (confirm('Are you sure you want to delete this item?')) {
+        menuItems = menuItems.filter(i => i.id !== id);
+        renderMenu();
+      }
+    }
+    document.getElementById('addItemForm').onsubmit = function(e) {
+      e.preventDefault();
+      const name = document.getElementById('addName').value;
+      const desc = document.getElementById('addDesc').value;
+      const price = parseFloat(document.getElementById('addPrice').value);
+      const category = document.getElementById('addCategory').value;
+      // For demo, use a static image
+      menuItems.push({
+        id: menuItems.length ? Math.max(...menuItems.map(i=>i.id))+1 : 1,
+        name,
+        description: desc,
+        price,
+        category,
+        status: 'active',
+        image: 'photo-1618160702438-9b02ab6515c9'
+      });
+      hideAddModal();
+      renderMenu();
+    };
+    document.getElementById('editItemForm').onsubmit = function(e) {
+      e.preventDefault();
+      if (editId == null) return;
+      const name = document.getElementById('editName').value;
+      const desc = document.getElementById('editDesc').value;
+      const price = parseFloat(document.getElementById('editPrice').value);
+      const category = document.getElementById('editCategory').value;
+      const idx = menuItems.findIndex(i => i.id === editId);
+      if (idx !== -1) {
+        menuItems[idx].name = name;
+        menuItems[idx].description = desc;
+        menuItems[idx].price = price;
+        menuItems[idx].category = category;
+      }
+      hideEditModal();
+      renderMenu();
+    };
+    renderMenu();
+  </script>
+</body>
+</html> 

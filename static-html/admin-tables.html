@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cozy Kitchen - Table Management</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="../public/favicon.ico">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+  <style>
+    @media (max-width: 600px) {
+      header { padding: 1.2rem 0.5rem 0.5rem 0.5rem; }
+      .card { padding: 1rem !important; margin-bottom: 1rem !important; }
+      .button { font-size: 1rem !important; padding: 0.8rem 1.2rem !important; border-radius: 0.8rem !important; }
+      #tableList li { font-size: 1rem !important; padding: 0.7rem 0 !important; }
+      .admin-table-actions { flex-direction: column !important; gap: 0.7rem !important; }
+      .table-row { flex-direction: column !important; align-items: flex-start !important; gap: 0.5rem !important; }
+    }
+    .table-row { display: flex; align-items: center; gap: 1.2rem; margin-bottom: 0.7rem; }
+    .table-qr { width: 60px; height: 60px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display:flex; align-items:center; gap:1rem; max-width:48rem; margin:0 auto;">
+      <a href="admin-dashboard.html" class="button" style="background:#fff; color:#fb923c; border:1px solid #fed7aa; padding:0.5rem 1rem; border-radius:9999px; font-size:1rem;">&#8592;</a>
+      <div>
+        <h1 style="font-size:2rem; font-weight:bold; color:#222;">Table Management</h1>
+        <p style="font-size:1rem; color:#666;">Manage restaurant tables (demo)</p>
+      </div>
+    </div>
+  </header>
+  <main style="max-width:40rem; margin:2rem auto; padding:0 1rem;">
+    <div class="card">
+      <h2 style="font-size:1.25rem; font-weight:bold; color:#fb923c; margin-bottom:1rem;">Tables</h2>
+      <ul id="tableList" style="list-style:none; padding:0; margin-bottom:1rem;"></ul>
+      <button class="button" style="background:#4ade80; color:#fff; margin-right:0.5rem;" onclick="addTable()">Add Table</button>
+      <button class="button" style="background:#ef4444; color:#fff;" onclick="removeTable()">Remove Table</button>
+      <p style="color:#888; margin-top:1rem;">This is a demo page. Table data is not persistent.</p>
+    </div>
+  </main>
+  <script>
+    // Table data: [{num: 1, code: 'abc123'}, ...]
+    let tables = [
+      {num: 1, code: 'A1B2C3'},
+      {num: 2, code: 'D4E5F6'},
+      {num: 3, code: 'G7H8J9'},
+      {num: 4, code: 'K1L2M3'},
+      {num: 5, code: 'N4O5P6'},
+      {num: 6, code: 'Q7R8S9'},
+      {num: 7, code: 'T1U2V3'},
+      {num: 8, code: 'W4X5Y6'}
+    ];
+    function randomCode() {
+      return Math.random().toString(36).substring(2,8).toUpperCase();
+    }
+    function renderTables() {
+      const ul = document.getElementById('tableList');
+      ul.innerHTML = '';
+      tables.forEach(t => {
+        const li = document.createElement('li');
+        li.className = 'table-row';
+        li.innerHTML = `<span style='font-weight:bold;'>Table ${t.num}</span> <span style='color:#888; font-size:0.95em;'>(code: ${t.code})</span> <canvas class='table-qr' id='qr-table-${t.code}' width='60' height='60'></canvas> <button class='button' style='font-size:0.9em; padding:0.2rem 0.7rem; margin-left:0.5rem;' onclick='downloadQR("${t.code}")'>⬇️</button>`;
+        ul.appendChild(li);
+        // Generate QR code for this table (code only)
+        setTimeout(() => {
+          new QRious({
+            element: document.getElementById('qr-table-' + t.code),
+            value: 'menu.html?code=' + t.code,
+            size: 60,
+            background: '#fff',
+            foreground: '#fb923c'
+          });
+        }, 0);
+      });
+    }
+    function addTable() {
+      const nextNum = tables.length ? Math.max(...tables.map(t=>t.num))+1 : 1;
+      let code;
+      do { code = randomCode(); } while (tables.some(t => t.code === code));
+      tables.push({num: nextNum, code});
+      renderTables();
+    }
+    function removeTable() {
+      tables.pop();
+      renderTables();
+    }
+    window.downloadQR = function(code) {
+      const canvas = document.getElementById('qr-table-' + code);
+      if (!canvas) return;
+      const link = document.createElement('a');
+      link.href = canvas.toDataURL('image/png');
+      link.download = `table-${code}-qr.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+    renderTables();
+  </script>
+</body>
+</html> 

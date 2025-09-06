@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cozy Kitchen - Cart</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="../public/favicon.ico">
+  <style>
+    @media (max-width: 600px) {
+      header { padding: 1.2rem 0.5rem 0.5rem 0.5rem; }
+      .card { padding: 1rem !important; margin-bottom: 1rem !important; }
+      .button { font-size: 1rem !important; padding: 0.8rem 1.2rem !important; border-radius: 0.8rem !important; }
+      .cart-item-row { flex-direction: column !important; gap: 0.7rem !important; align-items: flex-start !important; }
+      .cart-summary { font-size: 1rem !important; }
+      .cart-header { flex-direction: column !important; gap: 0.7rem !important; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display:flex; align-items:center; gap:1rem; max-width:48rem; margin:0 auto;">
+      <a href="menu.html" class="button" style="background:#fff; color:#fb923c; border:1px solid #fed7aa; padding:0.5rem 1rem; border-radius:9999px; font-size:1rem;">&#8592;</a>
+      <div>
+        <h1 style="font-size:2rem; font-weight:bold; color:#fb923c; display:flex; align-items:center; gap:0.5rem;">❤️ Your Order</h1>
+        <p style="font-size:1rem; color:#666;">Table 5 • Review & Checkout</p>
+      </div>
+    </div>
+  </header>
+  <main style="max-width:40rem; margin:2rem auto; padding:0 1rem;">
+    <div id="cartContent"></div>
+  </main>
+  <script src="script.js"></script>
+  <script>
+    let cart = JSON.parse(localStorage.getItem('restaurant-cart') || '[]');
+    let paymentMethod = 'cash';
+    let specialInstructions = '';
+    function updateCart() {
+      const cartDiv = document.getElementById('cartContent');
+      if (!cart.length) {
+        cartDiv.innerHTML = `<div class="card" style="text-align:center; padding:3rem 1rem;">
+          <div style="font-size:4rem; margin-bottom:1rem;">🍽️</div>
+          <h2 style="font-size:1.5rem; font-weight:bold; color:#222; margin-bottom:0.5rem;">Your cart is empty</h2>
+          <p style="color:#666; margin-bottom:1.5rem;">Add some delicious items to get started!</p>
+          <a href="menu.html" class="button">✨ Browse Menu</a>
+        </div>`;
+        return;
+      }
+      let subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      let tax = subtotal * 0.08;
+      let total = subtotal + tax;
+      cartDiv.innerHTML = `
+        <div class="card">
+          <h3 style="font-size:1.25rem; font-weight:bold; color:#fb923c; margin-bottom:1rem;">Order Items</h3>
+          ${cart.map(item => `
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+              <div>
+                <div style="font-weight:bold; color:#222;">${item.name}</div>
+                <div style="color:#666; font-size:0.95rem;">$${item.price} each</div>
+              </div>
+              <div style="display:flex; align-items:center; gap:0.5rem;">
+                <button class="button" style="padding:0.25rem 0.75rem; font-size:1rem; background:#fff; color:#fb923c; border:1px solid #fed7aa;" onclick="updateQty(${item.id},-1)">-</button>
+                <span style="width:2rem; text-align:center; font-weight:bold;">${item.quantity}</span>
+                <button class="button" style="padding:0.25rem 0.75rem; font-size:1rem; background:#fff; color:#fb923c; border:1px solid #fed7aa;" onclick="updateQty(${item.id},1)">+</button>
+                <button class="button" style="padding:0.25rem 0.75rem; font-size:1rem; background:#fff; color:#ef4444; border:1px solid #fed7aa;" onclick="removeItem(${item.id})">🗑️</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        <div class="card">
+          <h3 style="font-size:1.25rem; font-weight:bold; color:#fb923c; margin-bottom:1rem;">Payment Method</h3>
+          <div style="display:flex; gap:1rem; margin-bottom:1rem;">
+            <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+              <input type="radio" name="payment" value="cash" ${paymentMethod==='cash'?'checked':''} onchange="setPaymentMethod('cash')">
+              <span>💵 Pay at Table</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+              <input type="radio" name="payment" value="online" ${paymentMethod==='online'?'checked':''} onchange="setPaymentMethod('online')">
+              <span>💳 Pay Online</span>
+            </label>
+          </div>
+          <h3 style="font-size:1.25rem; font-weight:bold; color:#fb923c; margin-bottom:1rem;">Special Instructions</h3>
+          <textarea id="specialInstructions" placeholder="Any special requests for your order? (allergies, preferences, etc.)" style="width:100%; border-radius:1rem; border:1.5px solid #fed7aa; min-height:3rem; font-size:1rem; margin-bottom:1rem;" oninput="setSpecialInstructions(this.value)">${specialInstructions}</textarea>
+          <h3 style="font-size:1.25rem; font-weight:bold; color:#fb923c; margin-bottom:1rem;">Order Summary</h3>
+          <div style="display:flex; justify-content:space-between; font-size:1.1rem; margin-bottom:0.5rem;"><span>Subtotal</span><span>$${subtotal.toFixed(2)}</span></div>
+          <div style="display:flex; justify-content:space-between; font-size:1.1rem; margin-bottom:0.5rem;"><span>Tax</span><span>$${tax.toFixed(2)}</span></div>
+          <div style="display:flex; justify-content:space-between; font-size:1.2rem; font-weight:bold; margin-bottom:1rem;"><span>Total</span><span>$${total.toFixed(2)}</span></div>
+          <button class="button" style="width:100%;" onclick="checkout()">Checkout</button>
+        </div>
+      `;
+    }
+    function updateQty(id, change) {
+      const item = cart.find(i => i.id === id);
+      if (!item) return;
+      item.quantity = Math.max(1, item.quantity + change);
+      localStorage.setItem('restaurant-cart', JSON.stringify(cart));
+      updateCart();
+    }
+    function removeItem(id) {
+      cart = cart.filter(i => i.id !== id);
+      localStorage.setItem('restaurant-cart', JSON.stringify(cart));
+      updateCart();
+    }
+    function setPaymentMethod(method) {
+      paymentMethod = method;
+      updateCart();
+    }
+    function setSpecialInstructions(val) {
+      specialInstructions = val;
+    }
+    function checkout() {
+      if (paymentMethod === 'online') {
+        alert('Redirecting to secure payment gateway...');
+        setTimeout(function() {
+          cart = [];
+          localStorage.setItem('restaurant-cart', '[]');
+          window.location.href = 'order-status.html';
+        }, 1500);
+      } else {
+        alert('Order placed! Please pay at the table.');
+        cart = [];
+        localStorage.setItem('restaurant-cart', '[]');
+        window.location.href = 'order-status.html';
+      }
+    }
+    updateCart();
+  </script>
+</body>
+</html> 

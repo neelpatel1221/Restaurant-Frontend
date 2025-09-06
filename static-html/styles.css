@@ -1,0 +1,98 @@
+/* styles.css - Base styles for static HTML version */
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fff7ed 0%, #fef6e0 50%, #f0fdf4 100%);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  color: #222;
+}
+
+h1, h2, h3, h4 {
+  font-weight: bold;
+  color: #222;
+}
+
+header {
+  background: rgba(255,255,255,0.9);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  border-bottom: 1px solid #fed7aa;
+  padding: 2rem 1rem 1rem 1rem;
+  text-align: center;
+}
+
+.card {
+  background: rgba(255,255,255,0.8);
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  margin-bottom: 2rem;
+  padding: 2rem;
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+.card:hover {
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  transform: translateY(-4px);
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(90deg, #fb923c, #f59e42);
+  color: #fff;
+  border: none;
+  border-radius: 1rem;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(251,146,60,0.12);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.button:hover {
+  background: linear-gradient(90deg, #f59e42, #fb923c);
+  box-shadow: 0 4px 16px rgba(251,146,60,0.18);
+}
+
+a {
+  color: #fb923c;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+a:hover {
+  color: #ea580c;
+  text-decoration: underline;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rounded-full { border-radius: 9999px; }
+.bg-orange { background: #fb923c; }
+.bg-green { background: #4ade80; }
+.bg-blue { background: #38bdf8; }
+.bg-amber { background: #fbbf24; }
+.bg-white { background: #fff; }
+.bg-gradient {
+  background: linear-gradient(135deg, #fb923c 0%, #fbbf24 100%);
+}
+.shadow {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.quick-actions-card {
+  max-width: 340px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+@media (max-width: 600px) {
+  .quick-actions-card {
+    max-width: 100%;
+  }
+}
+
+/* Add more utility classes as needed for conversion */ 

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cozy Kitchen - All Orders</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="../public/favicon.ico">
+  <style>
+    @media (max-width: 600px) {
+      header { padding: 1.2rem 0.5rem 0.5rem 0.5rem; }
+      .card { padding: 1rem !important; margin-bottom: 1rem !important; }
+      .button { font-size: 1rem !important; padding: 0.8rem 1.2rem !important; border-radius: 0.8rem !important; }
+      .orders-table { font-size: 0.97rem !important; }
+      .orders-table th, .orders-table td { padding: 0.4rem 0.2rem !important; }
+      .orders-table th { font-size: 1rem !important; }
+      .orders-table td { font-size: 0.97rem !important; }
+      .orders-table { display: block; overflow-x: auto; }
+      .order-modal { width: 95vw !important; }
+    }
+    .orders-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 1rem; overflow: hidden; box-shadow: 0 2px 8px #0001; margin-bottom: 2rem; }
+    .orders-table th, .orders-table td { padding: 0.7rem 0.5rem; text-align: left; }
+    .orders-table th { background: #fff7ed; color: #fb923c; }
+    .orders-table tr { border-bottom: 1px solid #f3f4f6; }
+    .orders-table .status { border-radius: 9999px; padding: 0.15rem 0.7rem; color: #fff; font-size: 0.95em; }
+    .orders-table .status.confirmed { background: #3b82f6; }
+    .orders-table .status.preparing { background: #fbbf24; }
+    .orders-table .status.ready { background: #22c55e; }
+    .orders-table .status.served { background: #aaa; }
+    .orders-table .pay.paid { background: #22c55e; color: #fff; border-radius: 0.7rem; padding: 0.1rem 0.6rem; }
+    .orders-table .pay.pending { background: #fbbf24; color: #fff; border-radius: 0.7rem; padding: 0.1rem 0.6rem; }
+    .order-modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 100; }
+    .order-modal { background: #fff; border-radius: 1.2rem; max-width: 24rem; width: 100%; padding: 2rem; box-shadow: 0 8px 32px #0003; }
+    .order-modal h2 { font-size: 1.3rem; color: #fb923c; margin-bottom: 1rem; }
+    .order-modal .close-btn { background: #fff7ed; color: #fb923c; border: 1px solid #fed7aa; border-radius: 0.7rem; padding: 0.5rem 1.2rem; font-size: 1rem; margin-top: 1.5rem; cursor: pointer; width: 100%; }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display:flex; align-items:center; gap:1rem; max-width:48rem; margin:0 auto;">
+      <a href="admin-dashboard.html" class="button" style="background:#fff; color:#fb923c; border:1px solid #fed7aa;">&#8592;</a>
+      <div>
+        <h1 style="font-size:2rem; font-weight:bold; color:#222;">All Orders</h1>
+        <p style="font-size:1rem; color:#666;">Full order history (demo)</p>
+      </div>
+    </div>
+  </header>
+  <main style="max-width:48rem; margin:2rem auto; padding:0 1rem;">
+    <div class="card">
+      <table class="orders-table" id="ordersTable">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Table</th>
+            <th>Items</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Payment</th>
+            <th>Time</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>#12345</td>
+            <td>5</td>
+            <td>3</td>
+            <td>$55.37</td>
+            <td><span class="status preparing">preparing</span></td>
+            <td><span class="pay paid">paid</span></td>
+            <td>5 min ago</td>
+            <td><button class="button" style="font-size:0.9em; padding:0.2rem 0.7rem;">View</button></td>
+          </tr>
+          <tr>
+            <td>#12346</td>
+            <td>2</td>
+            <td>2</td>
+            <td>$32.50</td>
+            <td><span class="status ready">ready</span></td>
+            <td><span class="pay pending">pending</span></td>
+            <td>8 min ago</td>
+            <td><button class="button" style="font-size:0.9em; padding:0.2rem 0.7rem;">View</button></td>
+          </tr>
+          <tr>
+            <td>#12347</td>
+            <td>8</td>
+            <td>4</td>
+            <td>$68.25</td>
+            <td><span class="status confirmed">confirmed</span></td>
+            <td><span class="pay paid">paid</span></td>
+            <td>12 min ago</td>
+            <td><button class="button" style="font-size:0.9em; padding:0.2rem 0.7rem;">View</button></td>
+          </tr>
+          <tr>
+            <td>#12348</td>
+            <td>4</td>
+            <td>1</td>
+            <td>$18.99</td>
+            <td><span class="status served">served</span></td>
+            <td><span class="pay paid">paid</span></td>
+            <td>20 min ago</td>
+            <td><button class="button" style="font-size:0.9em; padding:0.2rem 0.7rem;">View</button></td>
+          </tr>
+          <tr>
+            <td>#12349</td>
+            <td>1</td>
+            <td>2</td>
+            <td>$27.50</td>
+            <td><span class="status preparing">preparing</span></td>
+            <td><span class="pay pending">pending</span></td>
+            <td>25 min ago</td>
+            <td><button class="button" style="font-size:0.9em; padding:0.2rem 0.7rem;">View</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+  <div id="orderModalBg" class="order-modal-bg" style="display:none;">
+    <div class="order-modal" id="orderModal">
+      <h2>Order Details</h2>
+      <div id="orderModalContent"></div>
+      <button class="close-btn" onclick="closeOrderModal()">Close</button>
+    </div>
+  </div>
+  <script>
+    // Demo order data (should match table rows)
+    const orders = [
+      {id: '12345', table: 5, items: 3, total: 55.37, status: 'preparing', payment: 'paid', time: '5 min ago', itemNames: ['Crispy Calamari', 'Grilled Salmon', 'Tiramisu']},
+      {id: '12346', table: 2, items: 2, total: 32.50, status: 'ready', payment: 'pending', time: '8 min ago', itemNames: ['Ribeye Steak', 'Chocolate Lava Cake']},
+      {id: '12347', table: 8, items: 4, total: 68.25, status: 'confirmed', payment: 'paid', time: '12 min ago', itemNames: ['Truffle Arancini', 'Grilled Salmon', 'Margherita Pizza', 'Tiramisu']},
+      {id: '12348', table: 4, items: 1, total: 18.99, status: 'served', payment: 'paid', time: '20 min ago', itemNames: ['Margherita Pizza']},
+      {id: '12349', table: 1, items: 2, total: 27.50, status: 'preparing', payment: 'pending', time: '25 min ago', itemNames: ['Crispy Calamari', 'Truffle Arancini']}
+    ];
+    function showOrderModal(idx) {
+      const order = orders[idx];
+      if (!order) return;
+      document.getElementById('orderModalContent').innerHTML = `
+        <div><b>Order ID:</b> #${order.id}</div>
+        <div><b>Table:</b> ${order.table}</div>
+        <div><b>Items:</b> ${order.items}</div>
+        <ul style='margin:0.5rem 0 0.5rem 1.2rem; color:#444; font-size:0.97rem;'>
+          ${order.itemNames.map(name => `<li>${name}</li>`).join('')}
+        </ul>
+        <div><b>Total:</b> $${order.total.toFixed(2)}</div>
+        <div><b>Status:</b> <span class="status ${order.status}">${order.status}</span></div>
+        <div><b>Payment:</b> <span class="pay ${order.payment}">${order.payment}</span></div>
+        <div><b>Time:</b> ${order.time}</div>
+      `;
+      document.getElementById('orderModalBg').style.display = 'flex';
+    }
+    function closeOrderModal() {
+      document.getElementById('orderModalBg').style.display = 'none';
+    }
+    // Attach click handlers to View buttons
+    document.addEventListener('DOMContentLoaded', function() {
+      const table = document.getElementById('ordersTable');
+      if (table) {
+        const btns = table.querySelectorAll('button');
+        btns.forEach((btn, idx) => {
+          btn.onclick = function() { showOrderModal(idx); };
+        });
+      }
+    });
+  </script>
+</body>
+</html> 

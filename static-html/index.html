@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cozy Kitchen - Home</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="../public/favicon.ico">
+  <style>
+    @media (max-width: 600px) {
+      header { padding: 1.2rem 0.5rem 0.5rem 0.5rem; }
+      h1 { font-size: 1.5rem !important; }
+      .card { padding: 1rem !important; margin-bottom: 1rem !important; }
+      .features-grid { grid-template-columns: 1fr !important; gap: 1rem !important; }
+      .button { font-size: 1rem !important; padding: 0.8rem 1.2rem !important; border-radius: 0.8rem !important; }
+      .center, .features-grid { flex-direction: column !important; }
+      .admin-btn { right: 0.5rem !important; bottom: 0.5rem !important; }
+      .mobile-stack { flex-direction: column !important; gap: 0.7rem !important; }
+    }
+  </style>
+</head>
+<body>
+  <div style="min-height:100vh; position:relative; overflow:hidden;">
+    <!-- Decorative background elements -->
+    <div style="position:absolute; top:5rem; left:2.5rem; width:5rem; height:5rem; background:#fed7aa; border-radius:50%; opacity:0.3;"></div>
+    <div style="position:absolute; top:10rem; right:5rem; width:4rem; height:4rem; background:#bbf7d0; border-radius:50%; opacity:0.4;"></div>
+    <div style="position:absolute; bottom:10rem; left:5rem; width:3rem; height:3rem; background:#fde68a; border-radius:50%; opacity:0.35;"></div>
+
+    <!-- Header -->
+    <header>
+      <div style="margin-bottom:1.5rem;">
+        <div style="width:6rem; height:6rem; background:linear-gradient(135deg,#fb923c,#f59e42,#ea580c); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto; box-shadow:0 8px 32px rgba(251,146,60,0.18);">
+          <span style="font-size:2.5rem;">🍽️</span>
+        </div>
+      </div>
+      <div style="max-width:40rem; margin:0 auto;">
+        <h1 style="font-size:2.5rem; font-weight:bold; color:#222; margin-bottom:1rem;">
+          Welcome to <span style="background:linear-gradient(90deg,#fb923c,#fbbf24);-webkit-background-clip:text;color:transparent;">Cozy Kitchen</span>
+        </h1>
+        <p style="font-size:1.25rem; color:#666; margin-bottom:0.5rem;">Your delightful dining experience starts here!</p>
+        <div style="display:flex; align-items:center; justify-content:center; gap:0.5rem; font-size:1.1rem; color:#fb923c;">
+          <span style="font-size:1.2rem;">❤️</span>
+          <span>Scan, order, and enjoy with love</span>
+          <span style="font-size:1.2rem;">✨</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Actions -->
+    <div style="padding:0 1.5rem; max-width:32rem; margin:0 auto; position:relative; z-index:1;">
+      <div class="card">
+        <div style="display:flex; align-items:center; gap:1.5rem;">
+          <div style="width:4rem; height:4rem; background:linear-gradient(135deg,#ffedd5,#fed7aa); border-radius:1rem; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px #fb923c22;">
+            <span style="font-size:2rem; color:#fb923c;">&#128273;</span>
+          </div>
+          <div style="flex:1;">
+            <h3 style="font-weight:bold; font-size:1.25rem; color:#222; margin-bottom:0.25rem;">Scan Table QR</h3>
+            <p style="color:#666;">Quick access to your table's menu</p>
+          </div>
+        </div>
+        <button id="showQRBtn" class="button" style="width:100%; margin-top:1.5rem;">
+          <span style="font-size:1.1rem; margin-right:0.5rem;">&#128273;</span>
+          Scan QR Code
+        </button>
+      </div>
+
+      <div class="card" style="animation-delay:0.1s;">
+        <div style="display:flex; align-items:center; gap:1.5rem;">
+          <div style="width:4rem; height:4rem; background:linear-gradient(135deg,#bbf7d0,#f0fdf4); border-radius:1rem; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px #4ade8022;">
+            <span style="font-size:2rem; color:#22c55e;">&#9776;</span>
+          </div>
+          <div style="flex:1;">
+            <h3 style="font-weight:bold; font-size:1.25rem; color:#222; margin-bottom:0.25rem;">Browse Menu</h3>
+            <p style="color:#666;">Explore our delicious offerings</p>
+          </div>
+        </div>
+        <a href="menu.html">
+          <button class="button" style="width:100%; margin-top:1.5rem; background:linear-gradient(90deg,#22c55e,#16a34a);">
+            <span style="font-size:1.1rem; margin-right:0.5rem;">&#9776;</span>
+            View Menu
+          </button>
+        </a>
+      </div>
+
+      <div class="card" style="animation-delay:0.2s;">
+        <div style="display:flex; align-items:center; gap:1.5rem;">
+          <div style="width:4rem; height:4rem; background:linear-gradient(135deg,#bae6fd,#f0f9ff); border-radius:1rem; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px #38bdf822;">
+            <span style="font-size:2rem; color:#38bdf8;">&#9200;</span>
+          </div>
+          <div style="flex:1;">
+            <h3 style="font-weight:bold; font-size:1.25rem; color:#222; margin-bottom:0.25rem;">Order Status</h3>
+            <p style="color:#666;">Track your current orders</p>
+          </div>
+        </div>
+        <a href="order-status.html">
+          <button class="button" style="width:100%; margin-top:1.5rem; background:linear-gradient(90deg,#38bdf8,#0ea5e9);">
+            <span style="font-size:1.1rem; margin-right:0.5rem;">&#9200;</span>
+            Check Status
+          </button>
+        </a>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <div style="padding:0 1.5rem; margin-top:4rem; max-width:56rem; margin-left:auto; margin-right:auto; position:relative; z-index:1;">
+      <div style="text-align:center; margin-bottom:3rem;">
+        <h2 style="font-size:2rem; font-weight:bold; color:#222; margin-bottom:1rem;">Why You'll Love Dining With Us</h2>
+        <div style="width:6rem; height:0.25rem; background:linear-gradient(90deg,#fb923c,#fbbf24); margin:0 auto; border-radius:1rem;"></div>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr; gap:2rem; max-width:100%;" class="features-grid">
+        <div style="text-align:center;">
+          <div style="width:5rem; height:5rem; background:linear-gradient(135deg,#ffedd5,#fed7aa); border-radius:1.5rem; display:flex; align-items:center; justify-content:center; margin:0 auto 1.5rem auto; box-shadow:0 2px 8px #fb923c22;">
+            <span style="font-size:2.5rem; color:#fb923c;">⚡</span>
+          </div>
+          <h3 style="font-weight:bold; font-size:1.25rem; color:#222; margin-bottom:0.75rem;">Lightning Fast</h3>
+          <p style="color:#666;">Order in seconds, not minutes</p>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:5rem; height:5rem; background:linear-gradient(135deg,#bbf7d0,#f0fdf4); border-radius:1.5rem; display:flex; align-items:center; justify-content:center; margin:0 auto 1.5rem auto; box-shadow:0 2px 8px #4ade8022;">
+            <span style="font-size:2.5rem; color:#22c55e;">❤️</span>
+          </div>
+          <h3 style="font-weight:bold; font-size:1.25rem; color:#222; margin-bottom:0.75rem;">Made with Love</h3>
+          <p style="color:#666;">Every dish crafted with care</p>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:5rem; height:5rem; background:linear-gradient(135deg,#bae6fd,#f0f9ff); border-radius:1.5rem; display:flex; align-items:center; justify-content:center; margin:0 auto 1.5rem auto; box-shadow:0 2px 8px #38bdf822;">
+            <span style="font-size:2.5rem; color:#38bdf8;">✨</span>
+          </div>
+          <h3 style="font-weight:bold; font-size:1.25rem; color:#222; margin-bottom:0.75rem;">Real-time Updates</h3>
+          <p style="color:#666;">Know exactly when your food is ready</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin Access -->
+    <div style="position:fixed; bottom:1.5rem; right:1.5rem; z-index:20;">
+      <a href="admin-dashboard.html">
+        <button class="button" style="border-radius:50%; padding:0.75rem 1.5rem; background:#fff; color:#222; box-shadow:0 2px 8px #0001;">
+          <span style="font-size:1.1rem; margin-right:0.5rem;">👥</span>
+          Staff
+        </button>
+      </a>
+    </div>
+
+    <!-- QR Scanner Modal -->
+    <div id="qrModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(2px); align-items:center; justify-content:center; z-index:50; padding:1rem;">
+      <div class="card" style="max-width:24rem; width:100%; box-shadow:0 8px 32px #0003;">
+        <div style="text-align:center;">
+          <div style="width:14rem; height:14rem; background:linear-gradient(135deg,#f3f4f6,#f9fafb); border-radius:1rem; display:flex; align-items:center; justify-content:center; margin:0 auto 1.5rem auto; box-shadow:inset 0 2px 8px #0001;">
+            <div style="color:#aaa;">
+              <span style="font-size:4rem; display:block; margin-bottom:1rem;">&#128273;</span>
+              <p style="font-size:0.9rem;">QR Scanner would appear here</p>
+            </div>
+          </div>
+          <p style="color:#666; margin-bottom:1.5rem;">Point your camera at the table's QR code</p>
+          <div style="display:flex; flex-direction:column; gap:0.75rem;">
+            <button id="qrSimulate" class="button" style="width:100%;">Simulate Scan (Table 5)</button>
+            <button id="qrClose" class="button" style="width:100%; background:#fff; color:#222; border:2px solid #fed7aa;">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html> 

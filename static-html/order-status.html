@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cozy Kitchen - Order Status</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="../public/favicon.ico">
+  <style>
+    @media (max-width: 600px) {
+      header { padding: 1.2rem 0.5rem 0.5rem 0.5rem; }
+      .card { padding: 1rem !important; margin-bottom: 1rem !important; }
+      .button { font-size: 1rem !important; padding: 0.8rem 1.2rem !important; border-radius: 0.8rem !important; }
+      .order-status-row { flex-direction: column !important; gap: 0.7rem !important; align-items: flex-start !important; }
+      .order-status-header { flex-direction: column !important; gap: 0.7rem !important; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display:flex; align-items:center; gap:1rem; max-width:48rem; margin:0 auto;">
+      <a href="index.html" class="button" style="background:#fff; color:#fb923c; border:1px solid #fed7aa; padding:0.5rem 1rem; border-radius:9999px; font-size:1rem;">&#8592;</a>
+      <div>
+        <h1 style="font-size:1.5rem; font-weight:bold; color:#222;">Order Status</h1>
+        <p style="font-size:1rem; color:#666;">Order #12345 • Table 5</p>
+      </div>
+    </div>
+  </header>
+  <main style="max-width:40rem; margin:2rem auto; padding:0 1rem;">
+    <div class="card" style="text-align:center;">
+      <div id="orderStatusIcon" style="font-size:3rem; margin-bottom:1rem;">✅</div>
+      <h2 id="orderStatusLabel" style="font-size:1.5rem; font-weight:bold; color:#222; margin-bottom:0.5rem;">Order Confirmed</h2>
+      <p id="orderStatusDesc" style="color:#666; margin-bottom:1rem;">We've received your order and it's being prepared with love!</p>
+      <div style="background:#f3f4f6; border-radius:1rem; height:1.5rem; margin-bottom:0.5rem; overflow:hidden;">
+        <div id="orderProgressBar" style="background:linear-gradient(90deg,#fb923c,#fbbf24); height:100%; width:25%; transition:width 0.5s;"></div>
+      </div>
+      <p style="font-size:0.95rem; color:#888;">Estimated time: <span id="orderStatusTime">5-10 minutes</span></p>
+    </div>
+    <div class="card">
+      <h3 style="font-size:1.1rem; font-weight:bold; color:#222; margin-bottom:1rem;">Order Progress</h3>
+      <div id="orderSteps"></div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:1.1rem; font-weight:bold; color:#222; margin-bottom:1rem;">Your Order</h3>
+      <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;"><span>2x Crispy Calamari</span><span>$25.98</span></div>
+      <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;"><span>1x Grilled Salmon</span><span>$24.99</span></div>
+      <div style="border-top:1px solid #fed7aa; padding-top:0.5rem; display:flex; justify-content:space-between; font-weight:bold;">
+        <span>Total</span><span>$55.37</span>
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:2rem;">
+      <button class="button" style="background:#fff; color:#fb923c; border:2px solid #fed7aa;" onclick="alert('A staff member will assist you soon!')">👥 Call Staff</button>
+      <button class="button" style="background:#fff; color:#4ade80; border:2px solid #bbf7d0;" onclick="alert('Your bill will be brought to your table!')">🔔 Request Bill</button>
+    </div>
+    <div class="card" style="background:linear-gradient(90deg,#fed7aa,#fbbf24);">
+      <div style="text-align:center;">
+        <h3 style="font-weight:bold; color:#222; margin-bottom:0.5rem;">Want to add more?</h3>
+        <p style="color:#666; margin-bottom:1rem;">Browse our menu and add items to your current order</p>
+        <a href="menu.html" class="button" style="background:#fb923c; color:#fff;">Add More Items</a>
+      </div>
+    </div>
+  </main>
+  <script src="script.js"></script>
+  <script>
+    // Order progress simulation
+    const orderSteps = [
+      { id: "confirmed", label: "Order Confirmed", icon: "✅" },
+      { id: "preparing", label: "Preparing", icon: "👨‍🍳" },
+      { id: "ready", label: "Ready to Serve", icon: "🔔" },
+      { id: "served", label: "Served", icon: "🍽️" }
+    ];
+    let orderProgress = 25;
+    let currentStep = 0;
+    function updateOrderStatus() {
+      let icon = orderSteps[currentStep].icon;
+      let label = orderSteps[currentStep].label;
+      let desc = [
+        "We've received your order and it's being prepared with love!",
+        "Our chefs are working their magic on your delicious meal!",
+        "Your order is ready! A staff member will bring it to your table shortly.",
+        "Enjoy your meal! Let us know if you need anything else."
+      ][currentStep];
+      let time = currentStep === 3 ? "Complete!" : "5-10 minutes";
+      document.getElementById('orderStatusIcon').textContent = icon;
+      document.getElementById('orderStatusLabel').textContent = label;
+      document.getElementById('orderStatusDesc').textContent = desc;
+      document.getElementById('orderStatusTime').textContent = time;
+      document.getElementById('orderProgressBar').style.width = (25 + currentStep * 25) + '%';
+      // Steps
+      let stepsHtml = '';
+      for (let i = 0; i < orderSteps.length; i++) {
+        stepsHtml += `<div style='display:flex; align-items:center; gap:1rem; margin-bottom:0.5rem;'>
+          <div style='width:2.5rem; height:2.5rem; border-radius:50%; display:flex; align-items:center; justify-content:center; background:${i <= currentStep ? '#4ade80' : '#f3f4f6'}; color:${i <= currentStep ? '#fff' : '#888'}; font-size:1.3rem;'>${orderSteps[i].icon}</div>
+          <div style='flex:1;'>
+            <div style='font-weight:bold; color:${i <= currentStep ? '#4ade80' : '#888'};'>${orderSteps[i].label}</div>
+            <div style='font-size:0.95rem; color:#888;'>${i <= currentStep ? 'Completed' : 'Pending'}</div>
+          </div>
+        </div>`;
+      }
+      document.getElementById('orderSteps').innerHTML = stepsHtml;
+    }
+    updateOrderStatus();
+    let interval = setInterval(() => {
+      if (currentStep < 3) {
+        currentStep++;
+        updateOrderStatus();
+      } else {
+        clearInterval(interval);
+      }
+    }, 3000);
+  </script>
+</body>
+</html> 

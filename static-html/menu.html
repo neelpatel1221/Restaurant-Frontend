@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cozy Kitchen - Menu</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="../public/favicon.ico">
+  <style>
+    @media (max-width: 600px) {
+      header { padding: 1.2rem 0.5rem 0.5rem 0.5rem; }
+      .card { padding: 1rem !important; margin-bottom: 1rem !important; }
+      .button { font-size: 1rem !important; padding: 0.8rem 1.2rem !important; border-radius: 0.8rem !important; }
+      .menu-filters { flex-direction: column !important; gap: 0.7rem !important; }
+      .menu-item-row { flex-direction: column !important; gap: 0.7rem !important; align-items: flex-start !important; }
+      .menu-img { width: 60px !important; height: 60px !important; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display:flex; align-items:center; justify-content:space-between; max-width:48rem; margin:0 auto;">
+      <div style="display:flex; align-items:center; gap:0.5rem;">
+        <a href="index.html" class="button" style="background:#fff; color:#fb923c; border:1px solid #fed7aa; padding:0.5rem 1rem; border-radius:9999px; font-size:1rem;">&#8592;</a>
+        <div>
+          <h1 style="font-size:1.25rem; font-weight:bold; color:#222;">Menu</h1>
+          <p style="font-size:0.9rem; color:#666;">Cozy Kitchen</p>
+        </div>
+      </div>
+      <a href="cart.html" class="button" style="background:linear-gradient(90deg,#fb923c,#ef4444); color:#fff; border-radius:1rem; padding:0.5rem 1.5rem; position:relative;">
+        🛒 <span id="cartCount" style="position:absolute; top:-0.5rem; right:-0.5rem; background:#ef4444; color:#fff; border-radius:9999px; font-size:0.8rem; padding:0.1rem 0.5rem; display:none;">0</span>
+      </a>
+    </div>
+  </header>
+  <main style="max-width:40rem; margin:2rem auto; padding:0 1rem;">
+    <!-- Search -->
+    <div style="margin-bottom:1rem;">
+      <input id="searchInput" type="text" placeholder="Search for dishes..." style="width:100%; padding:0.75rem 1rem; border-radius:1rem; border:1px solid #fed7aa; font-size:1rem;" />
+    </div>
+    <!-- Categories -->
+    <div style="margin-bottom:1.5rem; display:flex; gap:0.5rem; overflow-x:auto;">
+      <button class="button" data-category="All" style="background:#fb923c; color:#fff;">All</button>
+      <button class="button" data-category="Appetizers" style="background:#fff; color:#fb923c; border:1px solid #fed7aa;">Appetizers</button>
+      <button class="button" data-category="Main Courses" style="background:#fff; color:#fb923c; border:1px solid #fed7aa;">Main Courses</button>
+      <button class="button" data-category="Desserts" style="background:#fff; color:#fb923c; border:1px solid #fed7aa;">Desserts</button>
+    </div>
+    <!-- Menu Items -->
+    <div id="menuItems"></div>
+  </main>
+  <script src="script.js"></script>
+  <script>
+    // Menu data (static for demo)
+    const menuCategories = [
+      {
+        name: "Appetizers",
+        emoji: "🥗",
+        items: [
+          { id: 1, name: "Crispy Calamari", description: "Golden rings with tangy marinara sauce", price: 12.99, image: "photo-1618160702438-9b02ab6515c9", popular: true, rating: 4.8, veg: false },
+          { id: 2, name: "Truffle Arancini", description: "Creamy risotto balls with black truffle", price: 14.99, image: "photo-1618160702438-9b02ab6515c9", rating: 4.6, veg: true }
+        ]
+      },
+      {
+        name: "Main Courses",
+        emoji: "🍽️",
+        items: [
+          { id: 3, name: "Grilled Salmon", description: "Atlantic salmon with herb butter and seasonal vegetables", price: 24.99, image: "photo-1618160702438-9b02ab6515c9", popular: true, rating: 4.9, veg: false },
+          { id: 4, name: "Ribeye Steak", description: "12oz prime cut with garlic mashed potatoes", price: 32.99, image: "photo-1618160702438-9b02ab6515c9", rating: 4.7, veg: false },
+          { id: 5, name: "Margherita Pizza", description: "Fresh mozzarella, basil, and tomato sauce on wood-fired crust", price: 18.99, image: "photo-1618160702438-9b02ab6515c9", rating: 4.5, veg: true }
+        ]
+      },
+      {
+        name: "Desserts",
+        emoji: "🍰",
+        items: [
+          { id: 6, name: "Chocolate Lava Cake", description: "Warm chocolate cake with vanilla ice cream", price: 8.99, image: "photo-1618160702438-9b02ab6515c9", rating: 4.5, veg: true },
+          { id: 7, name: "Tiramisu", description: "Classic Italian dessert with coffee and mascarpone", price: 9.99, image: "photo-1618160702438-9b02ab6515c9", rating: 4.7, veg: true }
+        ]
+      }
+    ];
+    let selectedCategory = 'All';
+    let searchTerm = '';
+    let cart = JSON.parse(localStorage.getItem('restaurant-cart') || '[]');
+    function renderMenu() {
+      const allItems = menuCategories.flatMap(cat => cat.items.map(item => ({...item, category: cat.name})));
+      let filtered = selectedCategory === 'All' ? allItems : allItems.filter(i => i.category === selectedCategory);
+      if (searchTerm) filtered = filtered.filter(i => i.name.toLowerCase().includes(searchTerm.toLowerCase()));
+      const menuDiv = document.getElementById('menuItems');
+      menuDiv.innerHTML = '';
+      filtered.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div style="display:flex; gap:1rem; align-items:center;">
+            <img src="https://images.unsplash.com/${item.image}?w=100&h=100&fit=crop" alt="${item.name}" style="width:4rem; height:4rem; border-radius:0.75rem; object-fit:cover;">
+            <div style="flex:1;">
+              <h3 style="font-size:1.1rem; font-weight:bold; color:#222; margin-bottom:0.25rem;">${item.name}</h3>
+              <div style="margin-top:0.5rem; color:#fb923c; font-size:1rem; font-weight:bold;">$${item.price.toFixed(2)}</div>
+            </div>
+            <button class="button" style="padding:0.5rem 1rem; font-size:1rem;" onclick="addToCart(${item.id})">Add</button>
+          </div>
+        `;
+        menuDiv.appendChild(card);
+      });
+    }
+    function addToCart(id) {
+      const allItems = menuCategories.flatMap(cat => cat.items.map(item => ({...item, category: cat.name})));
+      const item = allItems.find(i => i.id === id);
+      if (!item) return;
+      const existing = cart.find(i => i.id === id);
+      if (existing) existing.quantity += 1;
+      else cart.push({...item, quantity: 1});
+      localStorage.setItem('restaurant-cart', JSON.stringify(cart));
+      updateCartCount();
+      alert('Added to cart!');
+    }
+    function updateCartCount() {
+      const count = cart.reduce((sum, i) => sum + (i.quantity || 1), 0);
+      const badge = document.getElementById('cartCount');
+      if (count > 0) {
+        badge.style.display = 'inline-block';
+        badge.textContent = count;
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+    document.querySelectorAll('button[data-category]').forEach(btn => {
+      btn.addEventListener('click', function() {
+        selectedCategory = this.getAttribute('data-category');
+        document.querySelectorAll('button[data-category]').forEach(b => b.style.background = '#fff');
+        this.style.background = '#fb923c';
+        this.style.color = '#fff';
+        renderMenu();
+      });
+    });
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+      searchTerm = this.value;
+      renderMenu();
+    });
+    updateCartCount();
+    renderMenu();
+  </script>
+</body>
+</html> 

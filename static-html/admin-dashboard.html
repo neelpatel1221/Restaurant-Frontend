@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cozy Kitchen - Admin Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="../public/favicon.ico">
+  <style>
+    .quick-action-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      width: 100%;
+      min-height: 2.5rem;
+      height: 2.5rem;
+      padding: 0 0.7rem;
+      margin-bottom: 0.5rem;
+      border: none;
+      border-radius: 0.7rem;
+      font-size: 0.98rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      justify-content: flex-start;
+      text-decoration: none;
+    }
+    .quick-action-btn.menu { background: linear-gradient(90deg,#fb923c,#fbbf24); color: #fff; }
+    .quick-action-btn.menu:hover { background: linear-gradient(90deg,#fbbf24,#fb923c); }
+    .quick-action-btn.orders { background: linear-gradient(90deg,#4ade80,#22c55e); color: #fff; }
+    .quick-action-btn.orders:hover { background: linear-gradient(90deg,#22c55e,#4ade80); }
+    .quick-action-btn.tables { background: linear-gradient(90deg,#38bdf8,#0ea5e9); color: #fff; }
+    .quick-action-btn.tables:hover { background: linear-gradient(90deg,#0ea5e9,#38bdf8); }
+    .quick-action-btn.analytics { background: linear-gradient(90deg,#a78bfa,#6366f1); color: #fff; }
+    .quick-action-btn.analytics:hover { background: linear-gradient(90deg,#6366f1,#a78bfa); }
+    .quick-action-btn svg, .quick-action-btn span { font-size: 1.1rem !important; }
+    @media (max-width: 600px) {
+      header { padding: 1.2rem 0.5rem 0.5rem 0.5rem; }
+      .card { padding: 1rem !important; margin-bottom: 1rem !important; }
+      .button, .quick-action-btn { font-size: 1rem !important; padding: 0.8rem 1.2rem !important; border-radius: 0.8rem !important; }
+      main > div { grid-template-columns: 1fr !important; }
+      .quick-action-btn { width: 100% !important; }
+    }
+    .quick-actions-card { box-sizing:border-box; }
+    @media (max-width: 900px) {
+      main > div { grid-template-columns: 1fr !important; }
+      .quick-actions-card { margin-top:1.5rem; }
+    }
+    @media (max-width: 700px) {
+      .admin-header-inner {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 0.5rem !important;
+      }
+      .admin-header-buttons {
+        width: 100%;
+        justify-content: flex-start !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header style="background:rgba(255,255,255,0.98); box-shadow:0 2px 8px rgba(0,0,0,0.06); border-bottom:2px solid #fb923c; padding:2.5rem 1rem 1.5rem 1rem; position:relative; z-index:10;">
+    <div class="admin-header-inner" style="display:flex; align-items:center; justify-content:space-between; max-width:64rem; margin:0 auto; width:100%; gap:1.5rem;">
+      <div style="flex:1 1 0%; min-width:0;">
+        <h1 style="font-size:2.2rem; font-weight:bold; color:#fb923c; margin-bottom:0.2rem;">Admin Dashboard</h1>
+        <p style="color:#666; font-size:1.1rem;">Cozy Kitchen Management</p>
+      </div>
+      <div class="admin-header-buttons" style="display:flex; align-items:center; gap:1rem;">
+        <button class="button" style="background:#fff; color:#ef4444; border:1px solid #ef4444; border-radius:9999px; font-size:1rem; min-width:120px; display:flex; align-items:center; justify-content:center;">🔔 Notifications <span style="background:#ef4444; color:#fff; border-radius:9999px; padding:0.1rem 0.5rem; margin-left:0.5rem; font-size:0.9rem;">3</span></button>
+        <a href="index.html" class="button" style="background:#fff; color:#fb923c; border:1px solid #fed7aa; min-width:90px; display:flex; align-items:center; justify-content:center;">Back to App</a>
+      </div>
+    </div>
+  </header>
+  <main style="padding:2rem 1rem; max-width:64rem; margin:0 auto;">
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:1.5rem; margin-bottom:2rem;">
+      <div class="card">
+        <div style="display:flex; align-items:center; justify-content:space-between;">
+          <div>
+            <p style="font-size:0.95rem; color:#666;">Active Orders</p>
+            <p style="font-size:2rem; font-weight:bold; color:#fb923c;">12</p>
+          </div>
+          <div style="width:3rem; height:3rem; background:#ffedd5; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+            <span style="font-size:1.5rem; color:#fb923c;">🛒</span>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div style="display:flex; align-items:center; justify-content:space-between;">
+          <div>
+            <p style="font-size:0.95rem; color:#666;">Completed Today</p>
+            <p style="font-size:2rem; font-weight:bold; color:#4ade80;">45</p>
+          </div>
+          <div style="width:3rem; height:3rem; background:#bbf7d0; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+            <span style="font-size:1.5rem; color:#4ade80;">⏰</span>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div style="display:flex; align-items:center; justify-content:space-between;">
+          <div>
+            <p style="font-size:0.95rem; color:#666;">Today's Revenue</p>
+            <p style="font-size:2rem; font-weight:bold; color:#38bdf8;">$1250.75</p>
+          </div>
+          <div style="width:3rem; height:3rem; background:#bae6fd; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+            <span style="font-size:1.5rem; color:#38bdf8;">📈</span>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div style="display:flex; align-items:center; justify-content:space-between;">
+          <div>
+            <p style="font-size:0.95rem; color:#666;">Avg Order Value</p>
+            <p style="font-size:2rem; font-weight:bold; color:#a78bfa;">$27.85</p>
+          </div>
+          <div style="width:3rem; height:3rem; background:#ddd6fe; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+            <span style="font-size:1.5rem; color:#a78bfa;">👥</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns:2fr 1fr; gap:1.5rem;">
+      <div class="card">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+          <h3 style="font-size:1.2rem; font-weight:bold; color:#222;">Recent Orders</h3>
+          <a href="admin-all-orders.html" class="button" style="background:#fff; color:#fb923c; border:1px solid #fed7aa; border-radius:9999px; font-size:1rem;">View All →</a>
+        </div>
+        <div>
+          <div style="display:flex; align-items:center; justify-content:space-between; background:#f3f4f6; border-radius:1rem; padding:1rem; margin-bottom:1rem;">
+            <div>
+              <div style="font-weight:bold; color:#222;">Table 5</div>
+              <div style="font-size:0.9rem; color:#888;">#12345</div>
+              <div style="font-size:1rem;">3 items • $55.37</div>
+              <div style="font-size:0.9rem; color:#888;">5 min ago</div>
+            </div>
+            <span style="background:#fde68a; color:#b45309; border-radius:9999px; padding:0.25rem 0.75rem; font-size:0.95rem;">preparing</span>
+          </div>
+          <div style="display:flex; align-items:center; justify-content:space-between; background:#f3f4f6; border-radius:1rem; padding:1rem; margin-bottom:1rem;">
+            <div>
+              <div style="font-weight:bold; color:#222;">Table 2</div>
+              <div style="font-size:0.9rem; color:#888;">#12346</div>
+              <div style="font-size:1rem;">2 items • $32.50</div>
+              <div style="font-size:0.9rem; color:#888;">8 min ago</div>
+            </div>
+            <span style="background:#bbf7d0; color:#166534; border-radius:9999px; padding:0.25rem 0.75rem; font-size:0.95rem;">ready</span>
+          </div>
+          <div style="display:flex; align-items:center; justify-content:space-between; background:#f3f4f6; border-radius:1rem; padding:1rem; margin-bottom:1rem;">
+            <div>
+              <div style="font-weight:bold; color:#222;">Table 8</div>
+              <div style="font-size:0.9rem; color:#888;">#12347</div>
+              <div style="font-size:1rem;">4 items • $68.25</div>
+              <div style="font-size:0.9rem; color:#888;">12 min ago</div>
+            </div>
+            <span style="background:#bae6fd; color:#1e40af; border-radius:9999px; padding:0.25rem 0.75rem; font-size:0.95rem;">confirmed</span>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h3 style="font-size:1.2rem; font-weight:bold; color:#222; margin-bottom:1rem;">Quick Actions</h3>
+        <a href="admin-menu.html" class="quick-action-btn menu"><span>🍽️</span> Manage Menu</a>
+        <a href="admin-orders.html" class="quick-action-btn orders"><span>🛒</span> View Orders</a>
+        <a href="admin-tables.html" class="quick-action-btn tables"><span>👥</span> Table Management</a>
+        <a href="admin-analytics.html" class="quick-action-btn analytics"><span>📈</span> Analytics</a>
+      </div>
+    </div>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html> 
