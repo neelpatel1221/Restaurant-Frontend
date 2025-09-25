@@ -68,7 +68,9 @@ export default function Login() {
                 <p className="text-sm text-red-500">{errors.password.message as String}</p>
               )}
             </div>
-            <Button type="submit" className="w-full">Login</Button>
+            <Button type="submit" disabled={loading} className="w-full">
+              {loading ? "Logging in..." : "Login"}
+            </Button>
           </form>
         </CardContent>
       </Card>
