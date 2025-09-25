@@ -5,19 +5,26 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: "/", // ✅ ensures correct paths for production
+  base: "/",
   server: {
     host: "::",
     port: 8080,
+    proxy:{
+      "/api":{
+        target: "http://localhost:5000",
+        changeOrigin: true,
+            rewrite: (path) => path.replace(/^\/api/, ""),
+
+      }
+    }
   },
   plugins: [
     react(),
-    // Only include componentTagger in development
     mode === "development" && componentTagger(),
   ].filter(Boolean),
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"), // ✅ your @ alias is fine
+      "@": path.resolve(__dirname, "./src"),
     },
   },
 }));
