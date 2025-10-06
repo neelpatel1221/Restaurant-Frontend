@@ -40,7 +40,6 @@ export default function Login() {
 
 
   const onSubmit: SubmitHandler<LoginFormData> = (data) => {
-    console.log("form data:", data);
     dispatch(loginUser(data))
   };
 

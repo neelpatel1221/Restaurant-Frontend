@@ -13,6 +13,11 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminMenu from "./pages/AdminMenu";
 import AdminOrders from "./pages/AdminOrders";
 import NotFound from "./pages/NotFound";
+import Dashboard from "./pages/Dashboard";
+import SidebarLayout from "./layouts/SidebarLayout";
+import ProtectedRoute from "./components/ui/ProtectedRoute";
+import Tables from "./pages/Tables";
+import { CreateMenu } from "./pages/CreateMenu";
 
 const queryClient = new QueryClient();
 
@@ -28,11 +33,20 @@ const App = () => (
           <Route path="/cart" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/order-status" element={<OrderStatus />} />
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/admin/menu" element={<AdminMenu />} />
-          <Route path="/admin/orders" element={<AdminOrders />} />
+
+          <Route element={ <ProtectedRoute> <SidebarLayout /></ProtectedRoute>}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/create-menu" element={<CreateMenu />} />
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/menu" element={<AdminMenu />} />
+            <Route path="/admin/orders" element={<AdminOrders />} />
+            <Route path="/tables" element={<Tables />} />
+          </Route>
+
+        
           <Route path="*" element={<NotFound />} />
         </Routes>
+        
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

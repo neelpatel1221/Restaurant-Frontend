@@ -3,7 +3,8 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 interface User {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   role?: string;
   avatar?: string;
@@ -46,27 +47,12 @@ const authSlice = createSlice({
     name: 'auth',
     initialState: initialState,
     reducers: {
-        loginStart: (state) => {
-            state.loading = true;
-            state.error = null;
-        },
-        loginSuccess: (
-            state,
-            action: PayloadAction<{ user: User; token: string}>
-        ) => {
-            state.loading = false;
-            state.isAuthenticated = true;
-            state.user = action.payload.user;
-            state.token = action.payload.token;
-        },
-        loginFailure: (state, action: PayloadAction<Error>) => {
-            state.loading = false;
-            state.error = action.payload as Error;
-        },
         logout: (state) => {
             state.isAuthenticated = false;
             state.user = null;
             state.token = null;
+            localStorage.removeItem("user")
+            localStorage.removeItem("token")
         },
     },
     extraReducers: (builder)=>{
@@ -91,11 +77,10 @@ const authSlice = createSlice({
             state.isAuthenticated = false;
             state.user = null;
             state.token = null;
-            
         })
     }
 })
 
-export const {loginFailure, loginStart, loginSuccess, logout} = authSlice.actions
+export const {logout} = authSlice.actions
 
 export default authSlice.reducer
