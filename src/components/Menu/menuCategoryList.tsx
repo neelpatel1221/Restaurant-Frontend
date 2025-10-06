@@ -1,43 +1,24 @@
 import { Button } from "../ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
-import { createCategory, getMenuCategorys, Menu } from "@/features/menuSlice";
+import { getMenuCategorys, Category, deleteCategory } from "@/features/menuSlice";
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { ColumnDef, ColumnFiltersState, flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable, VisibilityState } from "@tanstack/react-table";
-import { deleteable, getTableQrCode, getTables } from "@/features/tableSlice";
-import { ChevronDown, Pencil, Plus, QrCode, Trash } from "lucide-react";
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
-import { TableForm } from "../Tables/TableForm";
-import { QrCodeModal } from "../Tables/qrCodeModal";
+import { ColumnDef } from "@tanstack/react-table";
+import { Pencil, Trash } from "lucide-react";
 import { TableComponent } from "../ui/TableComponent";
-
-// export type Menu = {
-//     _id: string
-//     categoryName: number
-//     description: string
-//     isActive: boolean
-// }
+import { CategoryForm } from "./categoryForm";
 
 
-export function MenyCategoryList() {
-    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
-        []
-    )
-    const [columnVisibility, setColumnVisibility] =
-        useState<VisibilityState>({})
-    const [rowSelection, setRowSelection] = useState({})
-    const [isQrModalOpen, setIsQrModalOpen] = useState(false);
-    const [isTableModalOpen, setIsTableModalOpen] = useState(false);
-    const [tableId, setTableId] = useState<string | null>(null);
+
+export function MenuCategoryList() {
+    const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
+    const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+    const [categoryId, setCategoryId] = useState<string | null>(null);
 
     const dispatch = useDispatch<AppDispatch>()
-    const { menus, loading, error, success } = useSelector((state: RootState) => state.menu);
+    const { categories, loading, error, success } = useSelector((state: RootState) => state.menu);
 
     useEffect(() => {
         dispatch(getMenuCategorys())
@@ -53,29 +34,7 @@ export function MenyCategoryList() {
     }, [error, success])
 
 
-    const columns: ColumnDef<Menu>[] = [
-        //   {
-        //     id: "select",
-        //     header: ({ table }) => (
-        //       <Checkbox
-        //         checked={
-        //           table.getIsAllPageRowsSelected() ||
-        //           (table.getIsSomePageRowsSelected() && "indeterminate")
-        //         }
-        //         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        //         aria-label="Select all"
-        //       />
-        //     ),
-        //     cell: ({ row }) => (
-        //       <Checkbox
-        //         checked={row.getIsSelected()}
-        //         onCheckedChange={(value) => row.toggleSelected(!!value)}
-        //         aria-label="Select row"
-        //       />
-        //     ),
-        //     enableSorting: false,
-        //     enableHiding: false,
-        //   },
+    const columns: ColumnDef<Category>[] = [
         {
             accessorKey: "categoryName",
             header: "Category",
@@ -93,26 +52,6 @@ export function MenyCategoryList() {
             header: "Status",
             cell: ({ row }) => <div className="capitalize">{row.getValue("isActive") ? "Active" : "In Active"}</div>,
         },
-        //   {
-        //     accessorKey: "email",
-        //     header: ({ column }) => {
-        //       return (
-        //         <Button
-        //           accessKey="seating"
-        //           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        //         >
-        //           Email
-        //           <ArrowUpDown />
-        //         </Button>
-        //       )
-        //     },
-        //     cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
-        //   },
-        // {
-        //     accessorKey: "qrCode",
-        //     header: "Qr Code",
-        //     cell: ({ row }) => <QrCode className="cursor-pointer w-10 h-10 p-2 hover:bg-accent hover:text-accent-foreground rounded-sm" onClick={() => openQrCodeModal(row.original._id)} />,
-        // },
         {
             id: "actions",
             header: "Actions",
@@ -123,8 +62,8 @@ export function MenyCategoryList() {
                         <Button variant="ghost" size="icon"
                             onClick={async () => {
                                 try {
-                                    await dispatch(deleteable(row.original._id)).unwrap();
-                                    dispatch(getTables());
+                                    await dispatch(deleteCategory(row.original._id)).unwrap();
+                                    dispatch(getMenuCategorys());
                                 } catch (error) {
                                     console.error("Delete failed", error);
                                 }
@@ -134,7 +73,7 @@ export function MenyCategoryList() {
                             <Trash className="text-red-500" />
                         </Button>
 
-                        <Button variant="ghost" size="icon" onClick={() => openEditModal(row.original._id)}>
+                        <Button variant="ghost" size="icon" onClick={() => openCategoryEditModal(row.original._id)}>
                             <Pencil className="text-black-500" />
                         </Button>
                     </div>
@@ -143,59 +82,19 @@ export function MenyCategoryList() {
         },
     ]
 
-    const table = useReactTable({
-        data: menus as Menu[],
-        columns,
-        onColumnFiltersChange: setColumnFilters,
-        getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
-        getSortedRowModel: getSortedRowModel(),
-        getFilteredRowModel: getFilteredRowModel(),
-        onColumnVisibilityChange: setColumnVisibility,
-        onRowSelectionChange: setRowSelection,
-        state: {
-            columnFilters,
-            columnVisibility,
-            rowSelection,
-        },
-    })
+    const closeCategoryFormModal = () => {
+        setIsCategoryModalOpen(false);
+        setCategoryId(null);
+        setIsCategoryDialogOpen(false)
 
-    const openQrCodeModal = async (id: string) => {
-        try {
-            dispatch(getTableQrCode(id))
-            setIsQrModalOpen(true);
-
-        } catch (error) {
-            console.error("Error fetching QR code:", error);
-        }
     };
 
-    const handleAddTable = () => {
-        setIsTableModalOpen(true);
+    const openCategoryEditModal = (id: string) => {
+        setIsCategoryDialogOpen(true)
+        setCategoryId(id)
+        setIsCategoryModalOpen(true);
     }
 
-    const closeQrCodeModal = () => {
-        setIsQrModalOpen(false);
-    };
-    const closeTableFormModal = () => {
-        setIsTableModalOpen(false);
-        setTableId(null);
-
-    };
-
-    const openEditModal = (id: string) => {
-        setTableId(id)
-        setIsTableModalOpen(true);
-    }
-
-    // const handleDownload = () => {
-    //     if (!qrCode) return;
-
-    //     const link = document.createElement("a");
-    //     link.href = qrCode;
-    //     link.download = "qr-code.png";
-    //     link.click();
-    // };
     return (
         <>
             <Card className="w-full mb-5 max-w-full">
@@ -204,19 +103,15 @@ export function MenyCategoryList() {
                 </CardHeader>
                 <CardContent>
                     <TableComponent
-                        data={menus}
+                        data={categories}
                         columns={columns}
                         showColumnToggle={true}
                     />
-                    {/* <QrCodeModal
-                        isOpen={isQrModalOpen}
-                        onClose={closeQrCodeModal}
-                        onDownload={handleDownload}
-                    /> */}
-                    <TableForm
-                        isOpen={isTableModalOpen}
-                        onClose={closeTableFormModal}
-                        id={tableId}
+                    <CategoryForm
+                        showAsDialog={isCategoryModalOpen}
+                        showAsCard={false}
+                        onClose={closeCategoryFormModal}
+                        id={categoryId}
                     />
                 </CardContent>
             </Card>

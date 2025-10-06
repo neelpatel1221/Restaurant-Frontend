@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { Switch } from "@/components/ui/switch"
 
 import { createTable, getTables, updateTable } from "@/features/tableSlice";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 interface TableForm {
   tableNumber: number;
   isAvailable: boolean;

@@ -1,7 +1,8 @@
 import axios from "axios";
 
+const baseURL = import.meta.env.VITE_ENV === 'development' ? "/" : import.meta.env.VITE_API_URL;
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.DEV ? "/" : "http://localhost:5000",
+  baseURL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -18,6 +19,17 @@ axiosInstance.interceptors.request.use(
   (error)=> Promise.reject(error)
 )
 
+axiosInstance.interceptors.response.use(
+  (config)=> config, 
+  (error)=>{
+    if(error.status === 403) {
+      localStorage.removeItem("token")
+      localStorage.removeItem("user")
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  }
+)
 
 
 export default axiosInstance;
