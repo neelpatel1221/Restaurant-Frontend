@@ -1,6 +1,9 @@
 import axios from "axios";
 
 const baseURL = import.meta.env.VITE_ENV === 'development' ? "/api" : import.meta.env.VITE_API_URL;
+console.warn("🚀 ~ baseURL:", baseURL)
+
+
 const axiosInstance = axios.create({
   baseURL,
   headers: {
