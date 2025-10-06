@@ -29,10 +29,8 @@ const initialState: AuthState = {
 export const loginUser = createAsyncThunk(
     "auth/loginUser",
     async ( credentials: any, thunkApi)=>{
-        try {
-            console.warn("calliong api");
-            
-            const response = await axiosInstance.post('/api/auth/login', {
+        try {            
+            const response = await axiosInstance.post('/auth/login', {
                 email: credentials.email,
                 password: credentials.password,
             })
