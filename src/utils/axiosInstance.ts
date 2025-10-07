@@ -5,6 +5,7 @@ console.warn("🚀 ~ baseURL:", baseURL)
 
 
 const axiosInstance = axios.create({
+  // baseURL: import.meta.env.DEV ? "/api" : "http://localhost:5000",
   baseURL,
   headers: {
     "Content-Type": "application/json",

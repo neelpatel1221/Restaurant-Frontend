@@ -28,10 +28,13 @@ export function MenuCategoryList() {
         if (error) {
             toast.error(error.message);
         }
+    }, [error])
+
+    useEffect(() => {
         if (success) {
             toast.success(success);
         }
-    }, [error, success])
+    }, [success])
 
 
     const columns: ColumnDef<Category>[] = [
@@ -115,7 +118,7 @@ export function MenuCategoryList() {
                     />
                 </CardContent>
             </Card>
-            <Toaster />
+            {/* <Toaster /> */}
         </>
     )
 }

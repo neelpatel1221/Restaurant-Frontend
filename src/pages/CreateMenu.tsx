@@ -1,3 +1,4 @@
+import { Toaster } from "react-hot-toast";
 import { CategoryForm } from "../components/Menu/categoryForm";
 import { MenuCategoryList } from "../components/Menu/menuCategoryList";
 import { MenuItemForm } from "../components/Menu/menuItemForm";
@@ -20,6 +21,7 @@ export function CreateMenu() {
                 <MenuCategoryList />
                 <MenuItemList />
             </div>
+            <Toaster />
         </div>
     );
 }

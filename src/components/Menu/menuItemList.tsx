@@ -1,13 +1,12 @@
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/store/store";
-import { getMenuItems, MenuItem } from "@/features/menuSlice";
+import { AppDispatch, RootState } from "../../store/store";
+import { deleteMenuItem, getMenuItems, MenuItem } from "@/features/menuSlice";
 import { useEffect, useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
-import { ColumnDef, ColumnFiltersState, VisibilityState } from "@tanstack/react-table";
-import { deleteable, getTableQrCode, getTables } from "@/features/tableSlice";
-import { Pencil, QrCode, Trash } from "lucide-react";
+import toast from "react-hot-toast";
+import { ColumnDef } from "@tanstack/react-table";
+import { Pencil, Trash } from "lucide-react";
 
 
 import { TableComponent } from "../ui/TableComponent";
@@ -16,34 +15,38 @@ import { MenuItemForm } from "./menuItemForm";
 
 
 export function MenuItemList() {
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = useState({})
-  const [isQrModalOpen, setIsQrModalOpen] = useState(false);
   const [isMenuItemModalOpen, setIsMenuItemModalOpen] = useState(false);
-  const [tableId, setTableId] = useState<string | null>(null);
+  const [menuId, setMenuId] = useState<string | null>(null);
 
   const dispatch = useDispatch<AppDispatch>()
 
-  const { menus, loading, error, success } = useSelector((state: RootState) => state.menu);
+  const { menuItems, loading, error, success } = useSelector((state: RootState) => state.menu);
 
   useEffect(() => {
-    dispatch(getMenuItems())
-    console.warn(menus);
-    
+    dispatch(getMenuItems())    
   }, [])
 
   useEffect(() => {
-    if (error) {
-      toast.error(error.message);
-    }
-    if (success) {
-      toast.success(success);
-    }
-  }, [error, success])
+        if (error) {
+            toast.error(error.message);
+        }
+    }, [error])
+
+    useEffect(() => {
+        if (success) {
+            toast.success(success);
+        }
+    }, [success])
 
 
   const columns: ColumnDef<MenuItem>[] = [
+    {
+      accessorKey: "imageUrl",
+      header: "Image",
+      cell: ({ row }) => (
+        <img className="h-40 w-full object-cover" src={row.getValue("imageUrl")} alt={row.getValue("itemName")} />
+      ),
+    },
     {
       accessorKey: "itemName",
       header: "Item",
@@ -66,11 +69,6 @@ export function MenuItemList() {
       header: "Price",
       cell: ({ row }) => <div className="">{row.getValue("price") ?? ''}</div>,
     },
-    // {
-    //   accessorKey: "qrCode",
-    //   header: "Qr Code",
-    //   cell: ({ row }) => <QrCode className="cursor-pointer w-10 h-10 p-2 hover:bg-accent hover:text-accent-foreground rounded-sm" onClick={() => openQrCodeModal(row.original._id)} />,
-    // },
     {
       id: "actions",
       header: "Actions",
@@ -81,8 +79,8 @@ export function MenuItemList() {
             <Button variant="ghost" size="icon"
               onClick={async () => {
                 try {
-                  await dispatch(deleteable(row.original._id)).unwrap();
-                  dispatch(getTables());
+                  await dispatch(deleteMenuItem(row.original._id)).unwrap();
+                  dispatch(getMenuItems());
                 } catch (error) {
                   console.error("Delete failed", error);
                 }
@@ -102,24 +100,15 @@ export function MenuItemList() {
   ]
 
 
-  const openQrCodeModal = async (id: string) => {
-    try {
-      dispatch(getTableQrCode(id))
-      setIsQrModalOpen(true);
-
-    } catch (error) {
-      console.error("Error fetching QR code:", error);
-    }
-  };
 
   const closeTableFormModal = () => {
     setIsMenuItemModalOpen(false);
-    setTableId(null);
+    setMenuId(null);
 
   };
 
   const openEditModal = (id: string) => {
-    setTableId(id)
+    setMenuId(id)
     setIsMenuItemModalOpen(true);
   }
 
@@ -131,7 +120,7 @@ export function MenuItemList() {
         </CardHeader>
         <CardContent>
           <TableComponent
-            data={menus}
+            data={menuItems}
             columns={columns}
             showColumnToggle={true}
           />
@@ -140,10 +129,10 @@ export function MenuItemList() {
             showAsDialog={isMenuItemModalOpen}
             showAsCard={false}
             onClose={closeTableFormModal}
+            id={menuId}
           />
         </CardContent>
       </Card>
-      <Toaster />
     </>
   )
 }

@@ -18,6 +18,7 @@ import SidebarLayout from "./layouts/SidebarLayout";
 import ProtectedRoute from "./components/ui/ProtectedRoute";
 import Tables from "./pages/Tables";
 import { CreateMenu } from "./pages/CreateMenu";
+import { MenuListView } from "./components/Menu/menuListView";
 
 const queryClient = new QueryClient();
 
@@ -29,7 +30,8 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/menu" element={<Menu />} />
+          <Route path="/menu" element={<MenuListView />} />
+          <Route path="/demo-menu" element={<Menu />} />
           <Route path="/cart" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/order-status" element={<OrderStatus />} />
