@@ -1,13 +1,12 @@
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/store/store";
+import { AppDispatch, RootState } from "../../store/store";
 import { deleteMenuItem, getMenuItems, MenuItem } from "@/features/menuSlice";
 import { useEffect, useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
-import { ColumnDef, ColumnFiltersState, VisibilityState } from "@tanstack/react-table";
-import { deleteable, getTableQrCode, getTables } from "@/features/tableSlice";
-import { Pencil, QrCode, Trash } from "lucide-react";
+import toast from "react-hot-toast";
+import { ColumnDef } from "@tanstack/react-table";
+import { Pencil, Trash } from "lucide-react";
 
 
 import { TableComponent } from "../ui/TableComponent";
@@ -16,21 +15,15 @@ import { MenuItemForm } from "./menuItemForm";
 
 
 export function MenuItemList() {
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = useState({})
-  const [isQrModalOpen, setIsQrModalOpen] = useState(false);
   const [isMenuItemModalOpen, setIsMenuItemModalOpen] = useState(false);
   const [menuId, setMenuId] = useState<string | null>(null);
 
   const dispatch = useDispatch<AppDispatch>()
 
-  const { menus, loading, error, success } = useSelector((state: RootState) => state.menu);
+  const { menuItems, loading, error, success } = useSelector((state: RootState) => state.menu);
 
   useEffect(() => {
-    dispatch(getMenuItems())
-    console.warn(menus);
-    
+    dispatch(getMenuItems())    
   }, [])
 
   useEffect(() => {
@@ -47,6 +40,13 @@ export function MenuItemList() {
 
 
   const columns: ColumnDef<MenuItem>[] = [
+    {
+      accessorKey: "imageUrl",
+      header: "Image",
+      cell: ({ row }) => (
+        <img className="h-40 w-full object-cover" src={row.getValue("imageUrl")} alt={row.getValue("itemName")} />
+      ),
+    },
     {
       accessorKey: "itemName",
       header: "Item",
@@ -120,7 +120,7 @@ export function MenuItemList() {
         </CardHeader>
         <CardContent>
           <TableComponent
-            data={menus}
+            data={menuItems}
             columns={columns}
             showColumnToggle={true}
           />

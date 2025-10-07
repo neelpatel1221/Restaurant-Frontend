@@ -18,7 +18,8 @@ export interface Category {
 }
 
 interface MenuState {
-    menus: MenuItem[] | null;
+    menuItems: MenuItem[] | null;
+    menu: any[];
     categories: Category[] | null;
     loading: boolean;
     error: Error | null;
@@ -26,7 +27,8 @@ interface MenuState {
 }
 
 const initialState: MenuState = {
-    menus: [],
+    menuItems: [],
+    menu: [],
     categories: [],
     loading: false,
     error: null,
@@ -37,7 +39,7 @@ export const getMenuCategorys = createAsyncThunk(
     "menu/getMenuCategorys",
     async (_, thunkAPI) => {
         try {
-            const response = await axiosInstance.get("/api/menu/list_categories")
+            const response = await axiosInstance.get("/menu/list_categories")
             return response.data
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response?.data || "Failed to fetch Categorys");
@@ -48,7 +50,7 @@ export const createCategory = createAsyncThunk(
     "menu/createCategory",
     async (data: Category, thunkApi) => {
         try {
-            const response = await axiosInstance.post(`/api/menu/create_category`, data)
+            const response = await axiosInstance.post(`/menu/create_category`, data)
             return response.data
         } catch (error) {
             return thunkApi.rejectWithValue(error.response?.data || "Fail to Create Category")
@@ -60,7 +62,7 @@ export const updateCategory = createAsyncThunk(
     "menu/updateCategory",
     async ({ id, data }: { id: string, data: Category }, thunkApi) => {
         try {
-            const response = await axiosInstance.put(`/api/menu/update_category/${id}`, data)
+            const response = await axiosInstance.put(`/menu/update_category/${id}`, data)
             return response.data
         } catch (error) {
             return thunkApi.rejectWithValue(error.response?.data || "Fail to Update Category")
@@ -71,7 +73,7 @@ export const deleteCategory = createAsyncThunk(
     "menu/deleteCategory",
     async (id: string, thunkApi) => {
         try {
-            const response = await axiosInstance.delete(`/api/menu/delete_category/${id}`)
+            const response = await axiosInstance.delete(`/menu/delete_category/${id}`)
             return response.data
         } catch (error) {
             return thunkApi.rejectWithValue(error.response?.data || "Fail to Delete Category")
@@ -81,10 +83,10 @@ export const deleteCategory = createAsyncThunk(
 
 export const createMenuItem = createAsyncThunk(
     "menu/createMenuItem",
-    async (data: MenuItem, thunkApi) => {
+    async (data: any, thunkApi) => {
         try {
 
-            const response = await axiosInstance.post(`/api/menu/create_menu_item`, data)
+            const response = await axiosInstance.post(`/menu/create_menu_item`, data, {headers: {'Content-Type': 'multipart/form-data'}})
             return response.data
 
         } catch (error) {
@@ -97,10 +99,22 @@ export const getMenuItems = createAsyncThunk(
     "menu/getMenuItems",
     async (_, thunkAPI) => {
         try {
-            const response = await axiosInstance.get("/api/menu/list_menu_items")
+            const response = await axiosInstance.get("/menu/list_menu_items")
             return response.data
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response?.data || "Failed to fetch Menu Items");
+        }
+    }
+)
+
+export const getMenu = createAsyncThunk(
+    "menu/getMenu",
+    async (_, thunkAPI) => {
+        try {
+            const response = await axiosInstance.get("/menu")
+            return response.data
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response?.data || "Failed to fetch Menu");
         }
     }
 )
@@ -109,7 +123,7 @@ export const updateMenuItem = createAsyncThunk(
     "menu/updateMenuItem",
     async ({ id, data }: { id: string, data: MenuItem }, thunkApi) => {
         try {
-            const response = await axiosInstance.put(`/api/menu/update_menu_item/${id}`, data)
+            const response = await axiosInstance.put(`/menu/update_menu_item/${id}`, data)
             return response.data
         } catch (error) {
             return thunkApi.rejectWithValue(error.response?.data || "Fail to Update Menu Item")
@@ -121,7 +135,7 @@ export const deleteMenuItem = createAsyncThunk(
     "menu/deleteMenuItem",
     async (id: string, thunkApi) => {
         try {
-            const response = await axiosInstance.delete(`/api/menu/delete_menu_item/${id}`)
+            const response = await axiosInstance.delete(`/menu/delete_menu_item/${id}`)
             return response.data
         } catch (error) {
             return thunkApi.rejectWithValue(error.response?.data || "Fail to Delete Menu Item")
@@ -205,10 +219,25 @@ const menuSlice = createSlice({
             })
             .addCase(getMenuItems.fulfilled, (state, action: PayloadAction<any>) => {
                 state.success = action.payload.message
-                state.menus = action.payload.menuItems
+                state.menuItems = action.payload.menuItems
                 state.loading = false
             })
             .addCase(getMenuItems.rejected, (state, action: PayloadAction<any>) => {
+                state.error = action.payload
+                state.success = null
+                state.loading = false
+            })
+            .addCase(getMenu.pending, (state) => {
+                state.error = null
+                state.success = null
+                state.loading = true
+            })
+            .addCase(getMenu.fulfilled, (state, action: PayloadAction<any>) => {
+                state.success = action.payload.message
+                state.menu = action.payload
+                state.loading = false
+            })
+            .addCase(getMenu.rejected, (state, action: PayloadAction<any>) => {
                 state.error = action.payload
                 state.success = null
                 state.loading = false
@@ -221,7 +250,7 @@ const menuSlice = createSlice({
             })
             .addCase(createMenuItem.fulfilled, (state, action: PayloadAction<any>) => {
                 state.success = action.payload.message
-                state.menus?.push(action.payload.menuItem)
+                state.menuItems?.push(action.payload.menuItem)
                 state.error = null
                 state.loading = false
             })

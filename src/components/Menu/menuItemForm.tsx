@@ -33,13 +33,12 @@ interface MenuItemFormData {
 export function MenuItemForm({ showAsDialog, showAsCard, id = null, onClose }: MenuItemFormProps) {
     const { register, handleSubmit, setValue, control, formState: { errors } } = useForm<MenuItemFormData>()
     const dispatch = useDispatch<AppDispatch>()
-    const { menus, categories } = useSelector((state: RootState) => state.menu)
+    const { menu, categories, menuItems } = useSelector((state: RootState) => state.menu)
 
     useEffect(() => {
         if (id) {
-            const menuItem = menus?.find((menu) => menu._id === id)
-            console.warn(menuItem);
-
+            const menuItem = menuItems?.find((menu) => menu._id === id)
+            
             if (menuItem) {
                 setValue("itemName", menuItem?.itemName)
                 setValue("description", menuItem?.description)
@@ -48,7 +47,7 @@ export function MenuItemForm({ showAsDialog, showAsCard, id = null, onClose }: M
                     setValue("categoryId", menuItem?.categoryId?._id);
                 } else {
                     setValue("categoryId", menuItem?.categoryId);
-                }                
+                }
                 // setValue("image",  menuItem?.image)
                 setValue("isAvailable", menuItem?.isAvailable)
             }
@@ -56,8 +55,20 @@ export function MenuItemForm({ showAsDialog, showAsCard, id = null, onClose }: M
     }, [id])
 
     const onSubmit: SubmitHandler<MenuItemFormData> = async (data: any) => {
+
+        const formData = new FormData();
+
+        formData.append("itemName", data.itemName);
+        formData.append("description", data.description || "");
+        formData.append("price", data.price);
+        formData.append("categoryId", data.categoryId);
+        formData.append("isAvailable", "true");
+        const fileInput = document.getElementById("image") as HTMLInputElement;
+        if (fileInput?.files?.[0]) {
+            formData.append("image", fileInput.files[0]);
+        }
         if (!id) {
-            await dispatch(createMenuItem(data))
+            await dispatch(createMenuItem(formData))
         } else {
             await dispatch(updateMenuItem({ id, data }))
             await dispatch(getMenuItems())

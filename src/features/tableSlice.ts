@@ -31,7 +31,7 @@ export const getTables = createAsyncThunk(
     "table/getTables",
     async (_, thunkAPI) => {
         try {
-            const response = await axiosInstance.get('/api/table/list_tables')
+            const response = await axiosInstance.get('/table/list_tables')
             return response.data;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response?.data || "Failed to fetch tables");
@@ -44,7 +44,7 @@ export const getTableQrCode = createAsyncThunk(
     "table/getTableQrCode",
     async (id: string, thunkAPI) => {
         try {
-            const response = await axiosInstance.get(`/api/table/${id}/qr`, {
+            const response = await axiosInstance.get(`/table/${id}/qr`, {
                 responseType: "arraybuffer",
             });
             const base64Image = btoa(
@@ -65,7 +65,7 @@ export const createTable = createAsyncThunk(
     "table/createTable",
     async (data: Table, thunkApi)=>{
         try {
-            const response = await axiosInstance.post("/api/table/create_table", data)
+            const response = await axiosInstance.post("/table/create_table", data)
             return response.data
         } catch (error) {
             return thunkApi.rejectWithValue(error.response?.data || "Failed to create table");
@@ -78,7 +78,7 @@ export const updateTable = createAsyncThunk(
     "table/updateTable",
   async ({ id, data }: { id: string; data: Table }, thunkApi) => {
         try {
-            const response = await axiosInstance.put(`/api/table/update_table/${id}`, data)
+            const response = await axiosInstance.put(`/table/update_table/${id}`, data)
             return response.data
         } catch (error) {
             return thunkApi.rejectWithValue(error.response?.data || "Failed to update table");
@@ -91,7 +91,7 @@ export const deleteable = createAsyncThunk(
     "table/deleteTable",
     async (id: string, thunkApi)=>{
         try {
-            const response = await axiosInstance.delete(`/api/table/delete_table/${id}`)
+            const response = await axiosInstance.delete(`/table/delete_table/${id}`)
             return response.data
         } catch (error) {
             return thunkApi.rejectWithValue(error.response?.data || "Failed to delete table");
