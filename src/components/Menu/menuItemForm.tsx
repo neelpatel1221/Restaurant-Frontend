@@ -9,7 +9,7 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { Toaster } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
-import { createMenuItem, getMenuItems } from "@/features/menuSlice";
+import { createMenuItem, getMenuItems, updateMenuItem } from "@/features/menuSlice";
 import { useEffect } from "react";
 
 interface MenuItemFormProps {
@@ -31,15 +31,35 @@ interface MenuItemFormData {
 }
 
 export function MenuItemForm({ showAsDialog, showAsCard, id = null, onClose }: MenuItemFormProps) {
-    const { register, handleSubmit, setValue,control, formState: { errors } } = useForm<MenuItemFormData>()
+    const { register, handleSubmit, setValue, control, formState: { errors } } = useForm<MenuItemFormData>()
     const dispatch = useDispatch<AppDispatch>()
-    const { categories } = useSelector((state: RootState) => state.menu)
+    const { menus, categories } = useSelector((state: RootState) => state.menu)
+
+    useEffect(() => {
+        if (id) {
+            const menuItem = menus?.find((menu) => menu._id === id)
+            console.warn(menuItem);
+
+            if (menuItem) {
+                setValue("itemName", menuItem?.itemName)
+                setValue("description", menuItem?.description)
+                setValue("price", menuItem?.price)
+                if (typeof menuItem?.categoryId !== "string") {
+                    setValue("categoryId", menuItem?.categoryId?._id);
+                } else {
+                    setValue("categoryId", menuItem?.categoryId);
+                }                
+                // setValue("image",  menuItem?.image)
+                setValue("isAvailable", menuItem?.isAvailable)
+            }
+        }
+    }, [id])
 
     const onSubmit: SubmitHandler<MenuItemFormData> = async (data: any) => {
         if (!id) {
             await dispatch(createMenuItem(data))
         } else {
-            // await dispatch(updateMenuItem({id, data}))
+            await dispatch(updateMenuItem({ id, data }))
             await dispatch(getMenuItems())
             onClose()
         }
@@ -124,7 +144,7 @@ export function MenuItemForm({ showAsDialog, showAsCard, id = null, onClose }: M
                         {formContent}
                     </DialogContent>
                 </Dialog>
-                <Toaster />
+                {/* <Toaster /> */}
             </>
         );
     }
@@ -142,6 +162,7 @@ export function MenuItemForm({ showAsDialog, showAsCard, id = null, onClose }: M
                     </CardContent>
                 </Card>
             }
+            {/* <Toaster /> */}
         </>
     )
 }
