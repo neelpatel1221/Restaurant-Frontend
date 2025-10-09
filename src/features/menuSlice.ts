@@ -121,9 +121,9 @@ export const getMenu = createAsyncThunk(
 
 export const updateMenuItem = createAsyncThunk(
     "menu/updateMenuItem",
-    async ({ id, data }: { id: string, data: MenuItem }, thunkApi) => {
+    async ({ id, data }: { id: string, data: any }, thunkApi) => {
         try {
-            const response = await axiosInstance.put(`/menu/update_menu_item/${id}`, data)
+            const response = await axiosInstance.put(`/menu/update_menu_item/${id}`, data, {headers: {'Content-Type': 'multipart/form-data'}})
             return response.data
         } catch (error) {
             return thunkApi.rejectWithValue(error.response?.data || "Fail to Update Menu Item")

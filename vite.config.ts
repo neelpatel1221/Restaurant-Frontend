@@ -12,7 +12,6 @@ export default defineConfig(({ mode }) => ({
     proxy:{
       "/api":{
         target: mode === "development" ? "http://localhost:5000" : process.env.VITE_API_URL,
-        // target: "http://localhost:5000",
         changeOrigin: true,
             rewrite: (path) => path.replace(/^\/api/, ""),
 

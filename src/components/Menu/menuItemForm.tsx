@@ -38,7 +38,6 @@ export function MenuItemForm({ showAsDialog, showAsCard, id = null, onClose }: M
     useEffect(() => {
         if (id) {
             const menuItem = menuItems?.find((menu) => menu._id === id)
-            
             if (menuItem) {
                 setValue("itemName", menuItem?.itemName)
                 setValue("description", menuItem?.description)
@@ -70,7 +69,7 @@ export function MenuItemForm({ showAsDialog, showAsCard, id = null, onClose }: M
         if (!id) {
             await dispatch(createMenuItem(formData))
         } else {
-            await dispatch(updateMenuItem({ id, data }))
+            await dispatch(updateMenuItem({ id, data:formData }))
             await dispatch(getMenuItems())
             onClose()
         }

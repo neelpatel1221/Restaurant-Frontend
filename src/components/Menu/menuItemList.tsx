@@ -24,7 +24,7 @@ export function MenuItemList() {
 
   useEffect(() => {
     dispatch(getMenuItems())    
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
         if (error) {

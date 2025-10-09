@@ -31,6 +31,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/menu" element={<MenuListView />} />
+          <Route path="/menu/table/:id" element={<MenuListView />} />
           <Route path="/demo-menu" element={<Menu />} />
           <Route path="/cart" element={<Login />} />
           <Route path="/login" element={<Login />} />

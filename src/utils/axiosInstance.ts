@@ -1,9 +1,12 @@
 import axios from "axios";
 
-const baseURL = import.meta.env.VITE_ENV === 'development' ? "/api" : import.meta.env.VITE_API_URL;
+// const baseURL = import.meta.env.VITE_ENV === 'development' ? "/api" : import.meta.env.VITE_API_URL;
+// console.warn("🚀 ~ baseURL:", baseURL)
+
+
 const axiosInstance = axios.create({
-  // baseURL: import.meta.env.DEV ? "/api" : "http://localhost:5000",
-  baseURL,
+  baseURL: import.meta.env.DEV ? "/api" : "http://localhost:5000",
+  // baseURL,
   headers: {
     "Content-Type": "application/json",
   },
