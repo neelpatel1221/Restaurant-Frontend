@@ -30,26 +30,25 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/menu" element={<MenuListView />} />
           <Route path="/menu/table/:id" element={<MenuListView />} />
           <Route path="/demo-menu" element={<Menu />} />
           <Route path="/cart" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/order-status" element={<OrderStatus />} />
 
-          <Route element={ <ProtectedRoute> <SidebarLayout /></ProtectedRoute>}>
+          <Route element={<ProtectedRoute> <SidebarLayout /></ProtectedRoute>}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/create-menu" element={<CreateMenu />} />
+            <Route path="/menu" element={<MenuListView />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/menu" element={<AdminMenu />} />
             <Route path="/admin/orders" element={<AdminOrders />} />
             <Route path="/tables" element={<Tables />} />
           </Route>
 
-        
           <Route path="*" element={<NotFound />} />
         </Routes>
-        
+
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

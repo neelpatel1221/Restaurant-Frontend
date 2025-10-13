@@ -10,21 +10,24 @@ import {
   SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
 import { logout } from "@/features/authSlice"
 import { AppDispatch, RootState } from "@/store/store"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu"
 
-import {  ChevronUp, Home, Inbox, Settings, SquareMenu, Table, User2 } from "lucide-react"
+import { ChevronDown, ChevronUp, Home, Inbox, Settings, SquareMenu, Table, User2 } from "lucide-react"
 import { useDispatch, useSelector } from "react-redux"
 import { Link, useLocation, useNavigate } from "react-router-dom"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./collapsible"
 
 const items = [
-  {
-    title: "Menu",
-    url: "/create-menu",
-    icon: SquareMenu,
-  },
+  // {
+  //   title: "Menu",
+  //   url: "/create-menu",
+  //   icon: SquareMenu,
+  // },
   {
     title: "Orders",
     url: "/admin/orders",
@@ -51,7 +54,7 @@ export function AppSidebar() {
 
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
-  const {user} = useSelector((state: RootState)=> state.auth)
+  const { user } = useSelector((state: RootState) => state.auth)
 
   const handleLogout = () => {
     dispatch(logout())
@@ -65,9 +68,35 @@ export function AppSidebar() {
             <SidebarGroupLabel>Application</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
+                <Collapsible defaultOpen className="group/collapsible">
+                <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton>
+                      <SquareMenu />
+                      <span>Menu</span>
+                      <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      <SidebarMenuSubItem>
+                        <SidebarMenuButton asChild isActive={location.pathname === "/create-menu"}>
+                          <Link to="/create-menu">Create Menu</Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuSubItem>
+                      <SidebarMenuSubItem>
+                        <SidebarMenuButton asChild isActive={location.pathname === "/view-menu"}>
+                          <Link to="/menu">View Menu</Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuSubItem>
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </SidebarMenuItem>
+              </Collapsible>
+
                 {items.map((item) => {
                   const location = useLocation()
-                   
                   return (
                     <SidebarMenuItem className="mt-2" key={item.title}>
                       <SidebarMenuButton asChild isActive={item.url === location.pathname}>

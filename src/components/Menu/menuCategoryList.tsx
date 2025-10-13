@@ -77,7 +77,7 @@ export function MenuCategoryList() {
                         </Button>
 
                         <Button variant="ghost" size="icon" onClick={() => openCategoryEditModal(row.original._id)}>
-                            <Pencil className="text-black-500" />
+                            <Pencil className="text-blue-500" />
                         </Button>
                     </div>
                 )
