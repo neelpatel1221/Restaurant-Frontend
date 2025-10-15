@@ -21,7 +21,6 @@ export function CreateMenu() {
                 <MenuCategoryList />
                 <MenuItemList />
             </div>
-            <Toaster />
         </div>
     );
 }

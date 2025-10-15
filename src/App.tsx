@@ -1,7 +1,6 @@
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster as Sonner } from "./components/ui/toaster";
+import { TooltipProvider } from "./components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
@@ -19,6 +18,7 @@ import ProtectedRoute from "./components/ui/ProtectedRoute";
 import Tables from "./pages/Tables";
 import { CreateMenu } from "./pages/CreateMenu";
 import { MenuListView } from "./components/Menu/menuListView";
+import { Toaster } from "react-hot-toast";
 
 const queryClient = new QueryClient();
 
@@ -30,25 +30,25 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/menu" element={<MenuListView />} />
+          <Route path="/menu/table/:id" element={<MenuListView />} />
           <Route path="/demo-menu" element={<Menu />} />
           <Route path="/cart" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/order-status" element={<OrderStatus />} />
 
-          <Route element={ <ProtectedRoute> <SidebarLayout /></ProtectedRoute>}>
+          <Route element={<ProtectedRoute> <SidebarLayout /></ProtectedRoute>}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/create-menu" element={<CreateMenu />} />
+            <Route path="/menu" element={<MenuListView />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/menu" element={<AdminMenu />} />
             <Route path="/admin/orders" element={<AdminOrders />} />
             <Route path="/tables" element={<Tables />} />
           </Route>
 
-        
           <Route path="*" element={<NotFound />} />
         </Routes>
-        
+
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

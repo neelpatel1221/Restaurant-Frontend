@@ -1,5 +1,4 @@
 import {
-    ColumnDef,
     ColumnFiltersState,
     flexRender,
     getCoreRowModel,
@@ -9,7 +8,7 @@ import {
     useReactTable,
     VisibilityState,
 } from "@tanstack/react-table"
-import { ChevronDown, Pencil, Plus, QrCode, Trash } from "lucide-react"
+import { ChevronDown} from "lucide-react"
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import {
     Table,
@@ -18,15 +17,9 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table"
-import { useDispatch, useSelector } from "react-redux"
-import { AppDispatch, RootState } from "@/store/store"
-import { deleteable, getTableQrCode, getTables } from "@/features/tableSlice"
-// import { QrCodeModal } from "./qrCodeModal";
-import axiosInstance from "@/utils/axiosInstance"
-// import { TableForm } from "./TableForm"
-import toast, { Toaster } from "react-hot-toast"
-import { Button } from "@/components/ui/button"
+} from "../../components/ui/table"
+
+import { Button } from "../../components/ui/button"
 import { useState } from "react";
 
 export function TableComponent<TData, TValue>({

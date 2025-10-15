@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "../components/ui/button";
+import { Card, CardContent } from "../components/ui/card";
+import { Badge } from "../components/ui/badge";
 import { ShoppingCart, Search, ArrowLeft, Star, Plus, Minus } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { Input } from "../components/ui/input";
 
 const menuCategories = [
   {
@@ -94,12 +94,12 @@ const menuCategories = [
 
 // Cart context to share state between components
 const getCartFromStorage = () => {
-  const stored = localStorage.getItem('restaurant-cart');
+  const stored = localStorage.getItem('cart');
   return stored ? JSON.parse(stored) : [];
 };
 
 const saveCartToStorage = (cart: any[]) => {
-  localStorage.setItem('restaurant-cart', JSON.stringify(cart));
+  localStorage.setItem('cart', JSON.stringify(cart));
 };
 
 const Menu = () => {
