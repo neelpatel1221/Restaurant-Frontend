@@ -9,11 +9,11 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
-    proxy:{
-      "/api":{
+    proxy: {
+      "/api": {
         target: process.env.VITE_API_URL,
         changeOrigin: true,
-            rewrite: (path) => path.replace(/^\/api/, ""),
+        rewrite: (path) => path.replace(/^\/api/, ""),
 
       }
     }
