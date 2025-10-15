@@ -15,7 +15,7 @@ interface CartState {
 
 const getCartFromStorage = (): CartItem[] => {
   try {
-    const stored = localStorage.getItem("restaurant-cart")
+    const stored = localStorage.getItem("cart")
     return stored ? JSON.parse(stored) : []
   } catch {
     return []
@@ -23,7 +23,7 @@ const getCartFromStorage = (): CartItem[] => {
 }
 
 const saveCartToStorage = (cart: CartItem[]) => {
-  localStorage.setItem("restaurant-cart", JSON.stringify(cart))
+  localStorage.setItem("cart", JSON.stringify(cart))
 }
 
 const initialState: CartState = {

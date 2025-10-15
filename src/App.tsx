@@ -1,5 +1,4 @@
 
-import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -19,6 +18,7 @@ import ProtectedRoute from "./components/ui/ProtectedRoute";
 import Tables from "./pages/Tables";
 import { CreateMenu } from "./pages/CreateMenu";
 import { MenuListView } from "./components/Menu/menuListView";
+import { Toaster } from "react-hot-toast";
 
 const queryClient = new QueryClient();
 

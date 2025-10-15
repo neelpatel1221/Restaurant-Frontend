@@ -79,7 +79,7 @@
     ];
     let selectedCategory = 'All';
     let searchTerm = '';
-    let cart = JSON.parse(localStorage.getItem('restaurant-cart') || '[]');
+    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
     function renderMenu() {
       const allItems = menuCategories.flatMap(cat => cat.items.map(item => ({...item, category: cat.name})));
       let filtered = selectedCategory === 'All' ? allItems : allItems.filter(i => i.category === selectedCategory);
@@ -109,7 +109,7 @@
       const existing = cart.find(i => i.id === id);
       if (existing) existing.quantity += 1;
       else cart.push({...item, quantity: 1});
-      localStorage.setItem('restaurant-cart', JSON.stringify(cart));
+      localStorage.setItem('cart', JSON.stringify(cart));
       updateCartCount();
       alert('Added to cart!');
     }

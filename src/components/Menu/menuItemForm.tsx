@@ -154,7 +154,6 @@ export function MenuItemForm({ showAsDialog, showAsCard, id = null, onClose }: M
                         {formContent}
                     </DialogContent>
                 </Dialog>
-                {/* <Toaster /> */}
             </>
         );
     }
@@ -172,7 +171,6 @@ export function MenuItemForm({ showAsDialog, showAsCard, id = null, onClose }: M
                     </CardContent>
                 </Card>
             }
-            {/* <Toaster /> */}
         </>
     )
 }

@@ -118,7 +118,6 @@ export function MenuCategoryList() {
                     />
                 </CardContent>
             </Card>
-            {/* <Toaster /> */}
         </>
     )
 }

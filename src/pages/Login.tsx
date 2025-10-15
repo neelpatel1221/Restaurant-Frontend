@@ -73,7 +73,6 @@ export default function Login() {
           </form>
         </CardContent>
       </Card>
-      <Toaster />
     </div>
   );
 }

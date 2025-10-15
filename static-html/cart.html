@@ -32,7 +32,7 @@
   </main>
   <script src="script.js"></script>
   <script>
-    let cart = JSON.parse(localStorage.getItem('restaurant-cart') || '[]');
+    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
     let paymentMethod = 'cash';
     let specialInstructions = '';
     function updateCart() {
@@ -93,12 +93,12 @@
       const item = cart.find(i => i.id === id);
       if (!item) return;
       item.quantity = Math.max(1, item.quantity + change);
-      localStorage.setItem('restaurant-cart', JSON.stringify(cart));
+      localStorage.setItem('cart', JSON.stringify(cart));
       updateCart();
     }
     function removeItem(id) {
       cart = cart.filter(i => i.id !== id);
-      localStorage.setItem('restaurant-cart', JSON.stringify(cart));
+      localStorage.setItem('cart', JSON.stringify(cart));
       updateCart();
     }
     function setPaymentMethod(method) {
@@ -113,13 +113,13 @@
         alert('Redirecting to secure payment gateway...');
         setTimeout(function() {
           cart = [];
-          localStorage.setItem('restaurant-cart', '[]');
+          localStorage.setItem('cart', '[]');
           window.location.href = 'order-status.html';
         }, 1500);
       } else {
         alert('Order placed! Please pay at the table.');
         cart = [];
-        localStorage.setItem('restaurant-cart', '[]');
+        localStorage.setItem('cart', '[]');
         window.location.href = 'order-status.html';
       }
     }

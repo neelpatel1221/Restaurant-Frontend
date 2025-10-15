@@ -92,7 +92,6 @@ export function CategoryForm({ showAsDialog = false, showAsCard = false , onClos
                         {formContent}
                     </DialogContent>
                 </Dialog>
-                {/* <Toaster /> */}
             </>
         );
     }
@@ -110,7 +109,6 @@ export function CategoryForm({ showAsDialog = false, showAsCard = false , onClos
                 <CardFooter />
             </Card>
     }
-            {/* <Toaster /> */}
         </>
     );
 }

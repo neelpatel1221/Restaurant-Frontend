@@ -12,12 +12,12 @@ import { Separator } from "@/components/ui/separator";
 
 // Cart utilities to match Menu component
 const getCartFromStorage = () => {
-  const stored = localStorage.getItem('restaurant-cart');
+  const stored = localStorage.getItem('cart');
   return stored ? JSON.parse(stored) : [];
 };
 
 const saveCartToStorage = (cart: any[]) => {
-  localStorage.setItem('restaurant-cart', JSON.stringify(cart));
+  localStorage.setItem('cart', JSON.stringify(cart));
 };
 
 const Cart = () => {

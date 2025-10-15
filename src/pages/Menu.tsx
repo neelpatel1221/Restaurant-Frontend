@@ -94,12 +94,12 @@ const menuCategories = [
 
 // Cart context to share state between components
 const getCartFromStorage = () => {
-  const stored = localStorage.getItem('restaurant-cart');
+  const stored = localStorage.getItem('cart');
   return stored ? JSON.parse(stored) : [];
 };
 
 const saveCartToStorage = (cart: any[]) => {
-  localStorage.setItem('restaurant-cart', JSON.stringify(cart));
+  localStorage.setItem('cart', JSON.stringify(cart));
 };
 
 const Menu = () => {
