@@ -5,14 +5,8 @@ import axios from "axios";
 
 
 const axiosInstance = axios.create({
-<<<<<<< Updated upstream
   baseURL: import.meta.env.DEV ? "/api" : "http://localhost:5000",
   // baseURL,
-=======
-  baseURL: import.meta.env.DEV
-    ? "http://localhost:5000"
-    : "/api", // or your production API URL
->>>>>>> Stashed changes
   headers: {
     "Content-Type": "application/json",
   },
