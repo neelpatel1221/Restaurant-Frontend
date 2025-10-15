@@ -1,4 +1,4 @@
-import axiosInstance from '@/utils/axiosInstance'
+import axiosInstance from '../utils/axiosInstance'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { clearCart } from './cartSlice';
 
